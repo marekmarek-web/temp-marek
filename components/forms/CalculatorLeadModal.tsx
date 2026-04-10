@@ -1,7 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useId, useState } from "react";
 import { AppModal } from "@/components/ui/AppModal";
+import { cta } from "@/config/cta";
+import { siteConfig } from "@/config/site";
+import { AnalyticsEvents } from "@/lib/analytics/events";
+import { track } from "@/lib/analytics/track";
 import { postLeadFormData, postLeadJson } from "@/lib/forms/postLeadApi";
 import type { CalculatorLeadBody } from "@/lib/validation/calculatorLeadSchema";
 
@@ -44,6 +49,7 @@ export function CalculatorLeadModal({
 
   useEffect(() => {
     if (open) {
+      track(AnalyticsEvents.leadModalOpen, { calculator: calculatorType });
       setOpenedAt(Date.now());
       setStatus("idle");
       setErrorMsg(null);
@@ -55,7 +61,7 @@ export function CalculatorLeadModal({
       setNote("");
       setFile(null);
     }
-  }, [open]);
+  }, [open, calculatorType]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -97,7 +103,7 @@ export function CalculatorLeadModal({
         const res = await postLeadFormData(fd);
         if (!res.ok) {
           if (res.error === "email_not_configured") {
-            setErrorMsg("Odesílání e-mailu není na serveru nakonfigurováno. Napište nám na pribramsky@premiumbrokers.cz.");
+            setErrorMsg(`Odesílání e-mailu není na serveru nakonfigurováno. Napište nám na ${siteConfig.contactEmail}.`);
           } else {
             setErrorMsg("Odeslání se nepodařilo. Zkuste to znovu.");
           }
@@ -108,7 +114,7 @@ export function CalculatorLeadModal({
         const res = await postLeadJson(base);
         if (!res.ok) {
           if (res.error === "email_not_configured") {
-            setErrorMsg("Odesílání e-mailu není na serveru nakonfigurováno. Napište nám na pribramsky@premiumbrokers.cz.");
+            setErrorMsg(`Odesílání e-mailu není na serveru nakonfigurováno. Napište nám na ${siteConfig.contactEmail}.`);
           } else if (res.error === "rate_limit") {
             setErrorMsg("Příliš mnoho pokusů. Zkuste to za chvíli.");
           } else if (res.error === "too_fast") {
@@ -163,11 +169,21 @@ export function CalculatorLeadModal({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <p className="font-semibold text-brand-navy">Odesláno</p>
-            <p className="mt-1 text-sm text-slate-600">Brzy se ozveme.</p>
+            <p className="font-semibold text-brand-navy">Děkujeme</p>
+            <p className="mt-1 text-sm text-slate-600">
+              Ozveme se s návrhem dalšího kroku — obvykle do jednoho pracovního dne. Výpočet byl orientační; konkrétní
+              parametry doladíme spolu.
+            </p>
+            <p className="mt-3 text-sm text-slate-600">
+              Chcete jen občas tip z praxe e-mailem?{" "}
+              <Link href="/#newsletter-footer" className="font-semibold text-brand-navy hover:underline">
+                Přihlášení k novinkám v patičce
+              </Link>{" "}
+              — oddělené od této poptávky.
+            </p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form data-testid="calculator-lead-form" onSubmit={handleSubmit} className="space-y-4">
             <label className="sr-only" htmlFor="calc-lead-website-hp">
               Nepřepisujte
             </label>
@@ -259,10 +275,14 @@ export function CalculatorLeadModal({
               disabled={status === "loading"}
               className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-xl bg-brand-navy px-4 py-3 text-sm font-bold text-white shadow-md transition hover:bg-brand-navy/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan/50 focus-visible:ring-offset-2 disabled:opacity-70"
             >
-              {status === "loading" ? "Odesílám…" : "Odeslat"}
+              {status === "loading" ? "Odesílám…" : cta.calculatorSubmit}
             </button>
             <p className="text-center text-[11px] text-slate-500">
-              Odesláním souhlasíte se zpracováním údajů pro účel zpětného kontaktu.
+              Odesláním souhlasíte se zpracováním údajů pro účel zpětného kontaktu.{" "}
+              <Link href="/gdpr" className="text-brand-navy underline-offset-2 hover:underline">
+                Podmínky
+              </Link>
+              .
             </p>
           </form>
         )}

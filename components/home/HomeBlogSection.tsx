@@ -1,22 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
+import { BlogCoverImage } from "@/components/blog/BlogCoverImage";
+import { cta } from "@/config/cta";
 import { fetchPublishedPosts, formatPostDate } from "@/lib/posts";
 import { getHomeBlogIntro } from "@/lib/site-settings";
-
-function HomePostThumb({ src, title }: { src: string | null; title: string }) {
-  if (!src) {
-    return <div className="w-full h-full min-h-[200px] bg-slate-200" aria-hidden />;
-  }
-  return (
-    <Image
-      src={src}
-      alt={title}
-      fill
-      className="object-cover transition-transform duration-500 group-hover:scale-105 blog-img"
-      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-    />
-  );
-}
 
 /** Statická náhrada při načítání (stejná mřížka jako ostrá sekce). */
 export function HomeBlogSectionFallback() {
@@ -64,9 +50,14 @@ export async function HomeBlogSection() {
             {posts.map((p) => (
               <article key={p.id} className="animate-fade-in-up group">
                 <Link href={`/blog/${p.slug}`} className="block rounded-2xl overflow-hidden border border-brand-border bg-brand-background">
-                  <div className="relative aspect-[16/10] overflow-hidden bg-brand-border/50">
-                    <HomePostThumb src={p.cover_image_url} title={p.title} />
-                    <div className="blog-hover absolute inset-0 bg-gradient-to-t from-brand-navy/90 via-brand-navy/30 to-transparent opacity-0 transition-opacity duration-500 flex items-end p-6 pointer-events-none">
+                  <div className="relative w-full overflow-hidden bg-brand-border/50">
+                    <BlogCoverImage
+                      src={p.cover_image_url}
+                      alt=""
+                      variant="home"
+                      className="transition-transform duration-500 group-hover:scale-105 blog-img"
+                    />
+                    <div className="blog-hover pointer-events-none absolute inset-0 z-[1] flex items-end bg-gradient-to-t from-brand-navy/90 via-brand-navy/30 to-transparent p-6 opacity-0 transition-opacity duration-500">
                       <span className="text-white font-semibold">Číst článek</span>
                     </div>
                   </div>
@@ -80,6 +71,20 @@ export async function HomeBlogSection() {
             ))}
           </div>
         )}
+        <div className="mt-12 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+          <Link
+            href="/blog"
+            className="inline-flex items-center gap-2 rounded-full border-2 border-brand-navy px-6 py-3 text-sm font-semibold text-brand-navy transition-colors hover:bg-brand-navy hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan/50 focus-visible:ring-offset-2"
+          >
+            {cta.blogSeeAll}
+          </Link>
+          <Link
+            href="/kontakt"
+            className="text-sm font-semibold text-brand-navy underline-offset-4 hover:text-brand-cyan hover:underline"
+          >
+            Nebo rovnou {cta.articleConsultTopic.toLowerCase()}
+          </Link>
+        </div>
       </div>
     </section>
   );

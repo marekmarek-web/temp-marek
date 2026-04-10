@@ -1,14 +1,15 @@
 # Release readiness — praktický checklist
 
-Před nasazením na produkci projděte ručně nebo ve stagingu.
+Poslední kontrola před produkcí. Podrobnější kontext: **`docs/master-final-audit.md`**.
 
 ## Konfigurace a env
 
 - [ ] `NEXT_PUBLIC_SITE_URL` = kanonická HTTPS doména (bez lomítka na konci).
-- [ ] `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY` nastavené.
+- [ ] `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY` **nebo** `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (nový Supabase formát).
 - [ ] `SUPABASE_SERVICE_ROLE_KEY` jen na serveru (Vercel / hosting), ne v klientovi.
 - [ ] Resend: `RESEND_API_KEY`, `LEAD_EMAIL_TO`, případně `RESEND_FROM` s ověřenou doménou.
-- [ ] Supabase: migrace `001` + `002`, profily admin/editor, bucket `blog-covers`, URL redirecty pro auth.
+- [ ] Supabase migrace **v pořadí 001 → 005** — viz **`docs/admin-setup.md`** (bez 003–005 nejsou leady/subscribers/operativa kompletní).
+- [ ] Bucket `blog-covers`, profily admin/editor, URL redirecty pro auth (`admin-setup`).
 
 ## Homepage
 
@@ -60,3 +61,8 @@ Před nasazením na produkci projděte ručně nebo ve stagingu.
 - [ ] HTTP→HTTPS redirect.
 - [ ] 404 stránka zobrazuje navigaci.
 - [ ] Žádné konzolové chyby na hlavních trasách.
+
+## Po nasazení
+
+- [ ] `docs/first-24h-checklist.md` — první hodiny provozu.
+- [ ] `docs/post-deploy-smoke-tests.md` — pokud používáte interní QA.

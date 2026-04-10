@@ -1,6 +1,10 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useMemo, useState } from "react";
+import { CalculatorEngagement } from "@/components/analytics/CalculatorEngagement";
+import { AnalyticsEvents } from "@/lib/analytics/events";
+import { track } from "@/lib/analytics/track";
 import { CalculatorGoogleReviewBadge } from "../core/CalculatorGoogleReviewBadge";
 import { CalculatorMarketingHero } from "../core/CalculatorMarketingHero";
 import { CalculatorPageShell } from "../core/CalculatorPageShell";
@@ -9,9 +13,16 @@ import { InvestmentContactModal } from "./InvestmentContactModal";
 import { InvestmentStrategySwitcher } from "./InvestmentStrategySwitcher";
 import { InvestmentInputPanel } from "./InvestmentInputPanel";
 import { InvestmentResultsPanel } from "./InvestmentResultsPanel";
-import { InvestmentGrowthChart } from "./InvestmentGrowthChart";
-import { InvestmentAllocationChart } from "./InvestmentAllocationChart";
 import { InvestmentBacktestChart } from "./InvestmentBacktestChart";
+
+const InvestmentGrowthChart = dynamic(
+  () => import("./InvestmentGrowthChart").then((m) => m.InvestmentGrowthChart),
+  { loading: () => <div className="h-[280px] animate-pulse rounded-lg bg-slate-50" aria-hidden /> },
+);
+const InvestmentAllocationChart = dynamic(
+  () => import("./InvestmentAllocationChart").then((m) => m.InvestmentAllocationChart),
+  { loading: () => <div className="h-[280px] animate-pulse rounded-lg bg-slate-50" aria-hidden /> },
+);
 import {
   INVESTMENT_PROFILES,
   HISTORICAL_DATA,
@@ -34,6 +45,11 @@ export function InvestmentCalculatorPage() {
   const [startYear, setStartYear] = useState<number>(INVESTMENT_DEFAULTS.startYearDefault);
   const [leadOpen, setLeadOpen] = useState(false);
 
+  const openLead = () => {
+    track(AnalyticsEvents.calculatorCtaClick, { calculator: "investment" });
+    setLeadOpen(true);
+  };
+
   const profile = INVESTMENT_PROFILES[profileIndex] ?? INVESTMENT_PROFILES[1];
 
   const projection = useMemo(
@@ -47,6 +63,7 @@ export function InvestmentCalculatorPage() {
 
   return (
     <>
+    <CalculatorEngagement calculator="investment" />
     <div className="pt-0 pb-56 lg:pb-0">
       <CalculatorPageShell>
         <CalculatorMarketingHero badge={<CalculatorGoogleReviewBadge />}>
@@ -114,7 +131,7 @@ export function InvestmentCalculatorPage() {
               totalInvested={projection.totalInvested}
               totalGain={projection.totalGain}
               totalGainPercent={projection.totalGainPercent}
-              onCtaClick={() => setLeadOpen(true)}
+              onCtaClick={openLead}
             />
           </div>
         </div>
@@ -150,7 +167,7 @@ export function InvestmentCalculatorPage() {
           totalInvested={projection.totalInvested}
           totalGain={projection.totalGain}
           totalGainPercent={projection.totalGainPercent}
-          onCtaClick={() => setLeadOpen(true)}
+          onCtaClick={openLead}
         />
       </CalculatorMobileResultDock>
     </div>

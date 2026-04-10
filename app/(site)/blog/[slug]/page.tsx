@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { BlogViewBeacon } from "@/components/analytics/BlogViewBeacon";
+import { ArticleEndCta } from "@/components/blog/ArticleEndCta";
+import { SubscribeInlineForm } from "@/components/forms/SubscribeInlineForm";
 import { BlogCoverImage } from "@/components/blog/BlogCoverImage";
 import { BlogMarkdown } from "@/components/blog/BlogMarkdown";
 import { fetchAllPostSlugs, fetchPostBySlug, formatPostDate } from "@/lib/posts";
@@ -70,6 +73,7 @@ export default async function BlogArticlePage({ params }: Props) {
 
   return (
     <main className="main-with-header pt-24 pb-20 lg:pb-28">
+      <BlogViewBeacon kind="article" slug={post.slug} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div className="max-w-3xl mx-auto px-4 sm:px-6">
         <p className="text-xs font-semibold text-brand-cyan uppercase tracking-wider mb-2">
@@ -87,7 +91,8 @@ export default async function BlogArticlePage({ params }: Props) {
           <div className="rounded-2xl overflow-hidden border border-brand-border mb-10">
             <BlogCoverImage
               src={post.cover_image_url}
-              alt=""
+              alt={post.title}
+              variant="article"
               sizes="(max-width:768px) 100vw, 768px"
               priority
             />
@@ -99,7 +104,16 @@ export default async function BlogArticlePage({ params }: Props) {
           </p>
         ) : null}
         <BlogMarkdown body={post.body} />
-        <p className="mt-12">
+        <ArticleEndCta articleSlug={post.slug} />
+        <div className="mt-10 max-w-xl">
+          <SubscribeInlineForm
+            source="blog_article"
+            interestSegment="content_interest"
+            headline="Tipy a novinky k podobnému tématu"
+            description={`Článek: ${post.title}. Občas pošleme shrnutí z praxe — bez denního spamu.`}
+          />
+        </div>
+        <p className="mt-8">
           <Link href="/blog" className="text-brand-navy font-semibold hover:text-brand-cyan">
             ← Zpět na blog
           </Link>

@@ -1,10 +1,18 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { safeInternalPath } from "@/lib/security/safeRedirectPath";
 
 export async function middleware(request: NextRequest) {
+  // Neprovádět refresh session před OAuth/PKCE výměnou — může rozbít magic link.
+  if (request.nextUrl.pathname === "/auth/callback") {
+    return NextResponse.next({ request });
+  }
+
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url?.trim() || !anon?.trim()) {
+  const anon =
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim() ||
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY?.trim();
+  if (!url?.trim() || !anon) {
     if (request.nextUrl.pathname.startsWith("/admin")) {
       const login = new URL("/login", request.url);
       login.searchParams.set("error", "config");
@@ -21,12 +29,15 @@ export async function middleware(request: NextRequest) {
       getAll() {
         return request.cookies.getAll();
       },
-      setAll(cookiesToSet) {
+      setAll(cookiesToSet, headers) {
         cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
         supabaseResponse = NextResponse.next({ request });
         cookiesToSet.forEach(({ name, value, options }) =>
           supabaseResponse.cookies.set(name, value, options)
         );
+        if (headers) {
+          Object.entries(headers).forEach(([key, value]) => supabaseResponse.headers.set(key, value));
+        }
       },
     },
   });
@@ -44,8 +55,7 @@ export async function middleware(request: NextRequest) {
 
   if (user && request.nextUrl.pathname === "/login") {
     const raw = request.nextUrl.searchParams.get("next");
-    const next =
-      raw && raw.startsWith("/") && !raw.startsWith("//") ? raw : "/admin";
+    const next = safeInternalPath(raw, "/admin");
     return NextResponse.redirect(new URL(next, request.url));
   }
 

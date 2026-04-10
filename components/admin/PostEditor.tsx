@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useActionState, useEffect, useState } from "react";
 import Link from "next/link";
 import {
@@ -7,8 +8,16 @@ import {
   type SavePostState,
   uploadBlogCoverAction,
 } from "@/app/admin/posts/actions";
-import { MarkdownPreview } from "@/components/admin/MarkdownPreview";
+import { POST_DISTRIBUTION_LABELS, POST_DISTRIBUTION_STATUSES } from "@/lib/content/distribution";
 import type { BlogPost } from "@/lib/posts";
+
+const MarkdownPreview = dynamic(
+  () => import("@/components/admin/MarkdownPreview").then((m) => m.MarkdownPreview),
+  {
+    ssr: false,
+    loading: () => <p className="text-sm text-brand-muted py-4">Načítám náhled…</p>,
+  },
+);
 
 function toDatetimeLocalValue(iso: string | null): string {
   if (!iso) return "";
@@ -18,9 +27,9 @@ function toDatetimeLocalValue(iso: string | null): string {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
-type Props = { initial: BlogPost | null };
+type Props = { initial: BlogPost | null; flash?: "saved" | "created" | null };
 
-export function PostEditor({ initial }: Props) {
+export function PostEditor({ initial, flash = null }: Props) {
   const [coverUrl, setCoverUrl] = useState(initial?.cover_image_url ?? "");
   const [ogUrl, setOgUrl] = useState(initial?.og_image_url ?? "");
   const [body, setBody] = useState(initial?.body ?? "");
@@ -36,6 +45,14 @@ export function PostEditor({ initial }: Props) {
     setBody(initial?.body ?? "");
     setDirty(false);
   }, [initial]);
+
+  useEffect(() => {
+    if (!flash || typeof window === "undefined") return;
+    const url = new URL(window.location.href);
+    url.searchParams.delete("saved");
+    url.searchParams.delete("created");
+    window.history.replaceState({}, "", url.pathname + url.search);
+  }, [flash]);
 
   useEffect(() => {
     const onBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -76,13 +93,35 @@ export function PostEditor({ initial }: Props) {
         <h1 className="text-xl font-bold text-brand-text">
           {initial ? "Upravit článek" : "Nový článek"}
         </h1>
-        <Link href="/admin/posts" className="text-sm font-semibold text-brand-navy hover:text-brand-cyan">
+        <Link
+          href="/admin/posts"
+          className="text-sm font-semibold text-brand-navy hover:text-brand-cyan rounded-lg px-2 py-1 -mx-2 focus:outline-none focus:ring-2 focus:ring-brand-cyan focus:ring-offset-2"
+        >
           ← Zpět na seznam
         </Link>
       </div>
 
+      {flash === "saved" ? (
+        <p
+          role="status"
+          className="mb-4 text-sm text-green-900 rounded-xl bg-green-50 border border-green-200 px-4 py-3"
+        >
+          Změny jsou uložené. Můžete pokračovat v úpravách nebo se vrátit na seznam.
+        </p>
+      ) : null}
+      {flash === "created" ? (
+        <p
+          role="status"
+          className="mb-4 text-sm text-green-900 rounded-xl bg-green-50 border border-green-200 px-4 py-3"
+        >
+          Článek je vytvořený a uložený. Doplňte obsah a až budete připraveni, publikujte nebo uložte jako koncept.
+        </p>
+      ) : null}
+
       {state?.error && (
-        <p className="mb-4 text-sm text-red-600 rounded-xl bg-red-50 px-4 py-3">{state.error}</p>
+        <p className="mb-4 text-sm text-red-600 rounded-xl bg-red-50 px-4 py-3 border border-red-100" role="alert">
+          {state.error}
+        </p>
       )}
 
       <form
@@ -101,7 +140,7 @@ export function PostEditor({ initial }: Props) {
             name="slug"
             required
             defaultValue={initial?.slug ?? ""}
-            placeholder="napr-clanek"
+            placeholder="napr. muj-clanek"
             className="w-full px-4 py-3 rounded-xl border border-brand-border focus:ring-2 focus:ring-brand-cyan focus:border-transparent font-mono text-sm"
           />
         </div>
@@ -310,6 +349,57 @@ export function PostEditor({ initial }: Props) {
           <label htmlFor="featured" className="text-sm text-brand-text">
             Zvýrazněný článek
           </label>
+        </div>
+
+        <div className="rounded-2xl border border-brand-border bg-slate-50/90 p-4 space-y-4">
+          <div>
+            <p className="text-sm font-bold text-brand-text">Distribuce / newsletter (operativa)</p>
+            <p className="text-xs text-brand-muted mt-1">
+              Přehled pro tým — co je publikované, co čeká na sdílení, co potřebuje follow-up. Neodesílá e-maily
+              automaticky.
+            </p>
+          </div>
+          <div>
+            <label htmlFor="distribution_status" className="block text-sm font-semibold text-brand-text mb-1.5">
+              Stav distribuce
+            </label>
+            <select
+              id="distribution_status"
+              name="distribution_status"
+              defaultValue={initial?.distribution_status ?? "none"}
+              className="w-full max-w-md px-4 py-3 rounded-xl border border-brand-border focus:ring-2 focus:ring-brand-cyan focus:border-transparent bg-white text-sm"
+            >
+              {POST_DISTRIBUTION_STATUSES.map((s) => (
+                <option key={s} value={s}>
+                  {POST_DISTRIBUTION_LABELS[s]}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label htmlFor="promoted_at" className="block text-sm font-semibold text-brand-text mb-1.5">
+              Datum propagace / sdílení (volitelně)
+            </label>
+            <input
+              id="promoted_at"
+              name="promoted_at"
+              type="datetime-local"
+              defaultValue={toDatetimeLocalValue(initial?.promoted_at ?? null)}
+              className="w-full max-w-xs px-4 py-3 rounded-xl border border-brand-border focus:ring-2 focus:ring-brand-cyan focus:border-transparent text-sm"
+            />
+          </div>
+          <div className="flex items-start gap-3">
+            <input
+              id="newsletter_ready"
+              name="newsletter_ready"
+              type="checkbox"
+              defaultChecked={initial?.newsletter_ready ?? false}
+              className="mt-1 w-4 h-4 rounded border-brand-border text-brand-navy focus:ring-brand-cyan"
+            />
+            <label htmlFor="newsletter_ready" className="text-sm text-brand-text">
+              Obsahově připraveno do budoucího newsletteru
+            </label>
+          </div>
         </div>
 
         <div className="flex flex-wrap gap-3 pt-2">

@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FooterLeadForm } from "@/components/forms/FooterLeadForm";
+import { SubscribeInlineForm } from "@/components/forms/SubscribeInlineForm";
+import { legalConfig } from "@/config/legal";
 import {
   branches,
   footerQuickLinks,
@@ -131,11 +133,21 @@ export async function SiteFooter() {
         <div className="mt-12 rounded-2xl border border-white/10 bg-white/[0.04] p-6 sm:p-8">
           <div className="mb-5 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h3 className="text-base font-semibold text-white">Rychlá zpráva</h3>
-              <p className="text-sm text-slate-400">Krátký dotaz — odpovím co nejdříve.</p>
+              <h3 className="text-base font-semibold text-white">Krátká zpráva z patičky</h3>
+              <p className="text-sm text-slate-400">Jedna věta stačí — odpovím osobně, ne hromadnou šablonou.</p>
             </div>
           </div>
           <FooterLeadForm />
+        </div>
+
+        <div id="newsletter-footer" className="mt-8 scroll-mt-24">
+          <SubscribeInlineForm
+            variant="dark"
+            source="footer"
+            interestSegment="blog_audience"
+            headline="Novinky e-mailem (volitelně)"
+            description="Občas tip z praxe nebo oznámení nového článku — ne denní spam. Oddělené od žádosti o konzultaci výše."
+          />
         </div>
 
         <div className="mt-10 border-t border-white/10 pt-8">
@@ -161,19 +173,17 @@ export async function SiteFooter() {
             </div>
           </div>
           <p className="mt-6 max-w-4xl text-[11px] leading-relaxed text-slate-500">
-            Ing. Marek Příbramský (IČO 02024870) je vázaným zástupcem samostatného zprostředkovatele BEplan finanční plánování
-            s.r.o. (IČO 05779944). Činnost probíhá v registračním rámci: pojištění (zákon č. 170/2018 Sb.), spotřebitelské úvěry (zákon
-            č. 257/2016 Sb.), investiční služby (zákon č. 256/2004 Sb.), doplňkové penzijní spoření (zákon č. 427/2011 Sb.).
+            {legalConfig.regulatoryDisclaimerShort}
           </p>
           <p className="mt-4 text-xs text-slate-500">
             Vytvořil{" "}
             <a
-              href="https://www.m2digitalagency.cz/"
+              href={legalConfig.credit.href}
               target="_blank"
               rel="noopener noreferrer"
               className="font-medium text-slate-400 hover:text-white"
             >
-              M2DigitalAgency
+              {legalConfig.credit.label}
             </a>
           </p>
         </div>

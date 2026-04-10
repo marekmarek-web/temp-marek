@@ -3,18 +3,20 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
+import { PENSION_HERO_IMAGE } from "@/lib/media/pension-hero";
 
 export function PensionFullscreenHero() {
   return (
     <section className="relative flex min-h-[calc(100dvh-5.5rem)] items-center overflow-hidden bg-[#0a0f29] pb-16 pt-10 md:min-h-[calc(100dvh-6rem)] md:pt-20">
       <div className="absolute inset-0 z-0">
         <Image
-          src="/img/penzijni.jpg"
-          alt=""
+          src={PENSION_HERO_IMAGE.src}
+          alt={PENSION_HERO_IMAGE.alt}
           fill
-          className="object-cover"
+          className={PENSION_HERO_IMAGE.className}
           priority
-          sizes="100vw"
+          sizes={PENSION_HERO_IMAGE.sizes}
+          quality={PENSION_HERO_IMAGE.quality}
         />
         <div
           className="absolute inset-0 bg-gradient-to-br from-brand-navy/85 via-brand-navy/70 to-brand-navy/85"

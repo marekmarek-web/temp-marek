@@ -1,6 +1,8 @@
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
+export { formatPostDate } from "@/lib/format/date";
+
 export type BlogPost = {
   id: string;
   slug: string;
@@ -21,34 +23,40 @@ export type BlogPost = {
   og_image_url: string | null;
   content_type: string;
   updated_at?: string | null;
+  /** Admin / operativa — nepoužívá veřejný výpis článků. */
+  distribution_status?: string | null;
+  promoted_at?: string | null;
+  newsletter_ready?: boolean | null;
 };
+
+/** Sloupce pro výpis blogu / homepage — bez `body` (velké payloady). */
+const listingPostFields =
+  "id, slug, title, category, published_at, cover_image_url, reading_time";
+
+export type BlogPostListItem = Pick<
+  BlogPost,
+  "id" | "slug" | "title" | "category" | "published_at" | "cover_image_url" | "reading_time"
+>;
 
 const publicPostFields =
   "id, slug, title, excerpt, body, category, published, published_at, updated_at, cover_image_url, seo_title, seo_description, canonical_url, author_id, author_name, reading_time, featured, og_image_url, content_type";
 
-export function formatPostDate(iso: string | null): string {
-  if (!iso) return "";
-  const d = new Date(iso);
-  return d.toLocaleDateString("cs-CZ", {
-    day: "numeric",
-    month: "numeric",
-    year: "numeric",
-  });
-}
-
-export async function fetchPublishedPosts(limit?: number): Promise<BlogPost[]> {
+/**
+ * Publikované články pro výpis (blog, úvod) — bez těla článku kvůli menšímu přenosu z DB a HTML.
+ */
+export async function fetchPublishedPosts(limit?: number): Promise<BlogPostListItem[]> {
   if (!isSupabaseConfigured()) return [];
   try {
     const supabase = await createServerSupabaseClient();
     let q = supabase
       .from("posts")
-      .select(publicPostFields)
+      .select(listingPostFields)
       .eq("published", true)
       .order("published_at", { ascending: false });
     if (limit != null) q = q.limit(limit);
     const { data, error } = await q;
     if (error || !data) return [];
-    return data as BlogPost[];
+    return data as BlogPostListItem[];
   } catch {
     return [];
   }

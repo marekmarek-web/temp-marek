@@ -57,6 +57,7 @@ export function PensionResultsPanel({ result, onCtaPrimary }: PensionResultsPane
           {onCtaPrimary != null && (
             <button
               type="button"
+              data-testid="pension-calculator-cta"
               onClick={onCtaPrimary}
               className="flex min-h-[48px] w-full items-center justify-center gap-3 rounded-[14px] bg-[#2563eb] px-6 py-4 font-bold text-white shadow-lg transition-all hover:bg-[#1d4ed8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0d1f4e]"
             >

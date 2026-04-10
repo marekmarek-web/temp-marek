@@ -1,7 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { isSupabaseConfigured } from "@/lib/supabase/env";
+import { safeInternalPath } from "@/lib/security/safeRedirectPath";
+import { getPublicSupabaseAnonKey, isSupabaseConfigured } from "@/lib/supabase/env";
 
 export async function GET(request: Request) {
   if (!isSupabaseConfigured()) {
@@ -10,23 +11,31 @@ export async function GET(request: Request) {
 
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  const next = searchParams.get("next")?.startsWith("/") ? searchParams.get("next")! : "/admin";
+  const next = safeInternalPath(searchParams.get("next"), "/admin");
 
   if (!code) {
     return NextResponse.redirect(new URL("/login?error=auth", request.url));
   }
 
   const cookieStore = await cookies();
+  const redirectUrl = new URL(next, origin);
+  const response = NextResponse.redirect(redirectUrl);
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    getPublicSupabaseAnonKey()!,
     {
       cookies: {
         getAll() {
           return cookieStore.getAll();
         },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
+        setAll(cookiesToSet, headers) {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            response.cookies.set(name, value, options);
+          });
+          if (headers) {
+            Object.entries(headers).forEach(([key, value]) => response.headers.set(key, value));
+          }
         },
       },
     }
@@ -37,5 +46,5 @@ export async function GET(request: Request) {
     return NextResponse.redirect(new URL("/login?error=auth", request.url));
   }
 
-  return NextResponse.redirect(`${origin}${next}`);
+  return response;
 }

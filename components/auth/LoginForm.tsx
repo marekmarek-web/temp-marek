@@ -2,20 +2,23 @@
 
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { AnalyticsEvents } from "@/lib/analytics/events";
+import { track } from "@/lib/analytics/track";
+import { safeInternalPath } from "@/lib/security/safeRedirectPath";
 import { createBrowserSupabaseClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 
 type Props = { defaultNext?: string; errorKey?: string };
 
 const errorMessages: Record<string, string> = {
-  config: "Supabase není nakonfigurován. Doplňte proměnné prostředí.",
+  config: "Přihlášení do administrace není k dispozici. Obraťte se na správce webu.",
   auth: "Přihlášení se nezdařilo. Zkuste to znovu.",
   forbidden: "Tento účet nemá oprávnění do administrace.",
 };
 
 export function LoginForm({ defaultNext = "/admin", errorKey }: Props) {
   const searchParams = useSearchParams();
-  const next = searchParams.get("next") ?? defaultNext;
+  const next = safeInternalPath(searchParams.get("next"), defaultNext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -33,9 +36,15 @@ export function LoginForm({ defaultNext = "/admin", errorKey }: Props) {
       const supabase = createBrowserSupabaseClient();
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) {
-        setMsg(error.message);
+        track(AnalyticsEvents.adminLoginError, { method: "password" });
+        setMsg(
+          process.env.NODE_ENV === "development"
+            ? `${errorMessages.auth} (${error.message})`
+            : errorMessages.auth
+        );
         return;
       }
+      track(AnalyticsEvents.adminLoginSuccess, { method: "password" });
       window.location.href = next.startsWith("/") ? next : "/admin";
     } finally {
       setBusy(false);
@@ -64,7 +73,11 @@ export function LoginForm({ defaultNext = "/admin", errorKey }: Props) {
         },
       });
       if (error) {
-        setMsg(error.message);
+        setMsg(
+          process.env.NODE_ENV === "development"
+            ? `Odkaz se nepodařilo odeslat: ${error.message}`
+            : "Odkaz se nepodařilo odeslat. Zkuste to znovu."
+        );
         return;
       }
       setMsg("Odkaz pro přihlášení jsme vám poslali na e-mail.");

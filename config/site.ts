@@ -2,7 +2,7 @@ export const siteConfig = {
   name: "Marek Příbramský",
   titleTemplate: "%s | Marek Příbramský – Premium Brokers",
   defaultDescription:
-    "Marek Příbramský – finanční poradce. Pomáhám rodinám a podnikatelům sestavit strategie, které dávají smysl.",
+    "Finanční plánování pro rodiny a firmy: investice, hypotéka, pojištění a penze — srozumitelně a bez nátlaku na produkt.",
   contactEmail: "pribramsky@premiumbrokers.cz",
   phoneDisplay: "+420 728 480 423",
   phoneTel: "+420728480423",
@@ -14,17 +14,19 @@ export type NavItem = { label: string; href: string; external?: boolean };
 export const mainNav: NavItem[] = [
   { label: "O mně", href: "/#proc-ja" },
   { label: "Služby", href: "/#sluzby" },
-  { label: "Spolupráce", href: "/#kontakt" },
+  { label: "Spolupráce", href: "/#spoluprace" },
   { label: "Blog", href: "/blog" },
+  { label: "Kontakt", href: "/#kontakt" },
 ];
 
 /** Mobilní drawer — pořadí a položky jako v index.html (bez rozbalení jednotlivých kalkulaček). */
 export const mobileMenuLinks: NavItem[] = [
   { label: "O mně", href: "/#proc-ja" },
   { label: "Služby", href: "/#sluzby" },
-  { label: "Spolupráce", href: "/#kontakt" },
+  { label: "Spolupráce", href: "/#spoluprace" },
   { label: "Kalkulačky", href: "/kalkulacky" },
   { label: "Blog", href: "/blog" },
+  { label: "Kontakt", href: "/#kontakt" },
 ];
 
 export type ToolLink = { href: string; title: string; description: string };
@@ -33,22 +35,22 @@ export const toolsDropdown: ToolLink[] = [
   {
     href: "/hypotecnikalkulacka",
     title: "Hypoteční kalkulačka",
-    description: "Měsíční splátka a náklady",
+    description: "Orientační splátka a náklady",
   },
   {
     href: "/investicnikalkulacka",
     title: "Investiční kalkulačka",
-    description: "Projekce zhodnocení",
+    description: "Projekce v čase — vstup do konzultace",
   },
   {
     href: "/zivotnikalkulacka",
     title: "Kalkulačka životního pojištění",
-    description: "Potřebné krytí",
+    description: "Odhad potřebného krytí",
   },
   {
     href: "/penzijnikalkulacka",
     title: "Penzijní kalkulačka",
-    description: "Státní příspěvky",
+    description: "Příspěvky a mezera k cíli",
   },
 ];
 
@@ -58,6 +60,7 @@ export const footerQuickLinks: NavItem[] = [
   { label: "Pobočky", href: "/#pobocky" },
   { label: "Blog", href: "/blog" },
   { label: "Spolupráce", href: "/spoluprace" },
+  { label: "Kariéra", href: "/kariera" },
   { label: "Kontakt", href: "/#kontakt" },
 ];
 

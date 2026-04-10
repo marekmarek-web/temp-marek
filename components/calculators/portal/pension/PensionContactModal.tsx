@@ -33,8 +33,8 @@ export function PensionContactModal({ open, onClose, state, result, onSubmitSucc
       open={open}
       onClose={onClose}
       calculatorType="pension"
-      title="Chci tento plán nastavit"
-      subtitle="Nechte mi kontakt — ozvu se a probereme další postup."
+      title="Nastavit penzi a důchodovou strategii"
+      subtitle="Nechte kontakt — projdeme mezeru k cíli a reálné kroky (spoření, daně, horizont)."
       resultSummary={resultSummary}
       metadata={metadata}
       onSubmitSuccess={onSubmitSuccess}

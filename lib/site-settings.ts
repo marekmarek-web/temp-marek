@@ -2,9 +2,10 @@ import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 const DEFAULT_FOOTER_TAGLINE =
-  "Privátní finanční plánování pro lidi, kteří chtějí mít klid. Pomáhám rodinám a podnikatelům sestavit strategie, které dávají smysl.";
+  "Finanční plánování pro rodiny a firmy — srozumitelně a bez nátlaku na produkt. Premium Brokers, region Ústí a Praha.";
 
-const DEFAULT_HOME_BLOG_INTRO = "Články o financích, investicích a plánování.";
+const DEFAULT_HOME_BLOG_INTRO =
+  "Krátké texty z praxe: investice, hypotéka, pojištění, penze. Až dočtete, víte, jestli chcete konzultaci nebo jen kalkulačku.";
 
 export type PublicSiteSettingKey = "footer_tagline" | "home_blog_intro";
 

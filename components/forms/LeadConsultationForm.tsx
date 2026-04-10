@@ -1,15 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { pageUrl } from "@/lib/forms/leadSubmit";
+import { useEffect, useState } from "react";
+import { cta } from "@/config/cta";
+import { siteConfig } from "@/config/site";
+import { AnalyticsEvents } from "@/lib/analytics/events";
+import { track } from "@/lib/analytics/track";
+import { pageUrl } from "@/lib/forms/page-url";
 import { postLeadJson } from "@/lib/forms/postLeadApi";
 
 const TOPICS: { key: string; label: string }[] = [
-  { key: "investice", label: "📈 Investovat peníze" },
-  { key: "hypoteka", label: "🏠 Řeším hypotéku" },
-  { key: "smlouvy", label: "🛡️ Zkontrolovat smlouvy" },
-  { key: "firemni", label: "💼 Firemní finance" },
+  { key: "investice", label: "Investice a portfolio" },
+  { key: "hypoteka", label: "Hypotéka / bydlení" },
+  { key: "smlouvy", label: "Zkontrolovat smlouvy" },
+  { key: "firemni", label: "Firemní finance" },
 ];
 
 export function LeadConsultationForm() {
@@ -24,6 +28,12 @@ export function LeadConsultationForm() {
   const [done, setDone] = useState(false);
   const [openedAt] = useState(() => Date.now());
   const [companyWebsite, setCompanyWebsite] = useState("");
+
+  useEffect(() => {
+    if (step === 2) {
+      track(AnalyticsEvents.leadModalOpen, { funnel: "homepage_consultation" });
+    }
+  }, [step]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -44,7 +54,7 @@ export function LeadConsultationForm() {
       });
       if (!res.ok) {
         if (res.error === "email_not_configured") {
-          setError("Odesílání zatím není nakonfigurované. Napište na pribramsky@premiumbrokers.cz.");
+          setError(`Odesílání zatím není nakonfigurované. Napište na ${siteConfig.contactEmail}.`);
         } else if (res.error === "too_fast") {
           setError("Zkuste formulář odeslat znovu za chvíli.");
         } else {
@@ -68,8 +78,14 @@ export function LeadConsultationForm() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h3 className="text-xl font-bold text-brand-navy mb-2">Zpráva odeslána</h3>
-        <p className="text-brand-muted">Ozveme se vám co nejdříve.</p>
+        <h3 className="text-xl font-bold text-brand-navy mb-2">Děkujeme — zpráva je u nás</h3>
+        <p className="text-brand-muted">
+          Ozveme se obvykle do jednoho pracovního dne s návrhem termínu. Spěcháte? Zavolejte na{" "}
+          <a href={`tel:${siteConfig.phoneTel}`} className="font-semibold text-brand-navy hover:text-brand-cyan">
+            {siteConfig.phoneDisplay}
+          </a>
+          .
+        </p>
       </div>
     );
   }
@@ -78,8 +94,8 @@ export function LeadConsultationForm() {
     <>
       {step === 1 && (
         <div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-brand-navy mb-2">Chcete to probrat?</h2>
-          <p className="text-brand-muted leading-relaxed mb-6">S čím vám mohu pomoci?</p>
+          <h2 className="text-2xl sm:text-3xl font-bold text-brand-navy mb-2">S čím začneme?</h2>
+          <p className="text-brand-muted leading-relaxed mb-6">Vyberte oblast — v dalším kroku doplníte kontakt.</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {TOPICS.map((t) => (
               <button
@@ -88,6 +104,7 @@ export function LeadConsultationForm() {
                 className="smart-choice p-4 rounded-xl text-left font-semibold text-brand-navy border-2 border-slate-200 hover:border-brand-cyan hover:bg-brand-cyan/5 transition-all"
                 onClick={() => {
                   setTopic(t.key);
+                  track(AnalyticsEvents.ctaClick, { cta_id: "home_consultation_topic", topic: t.key });
                   setStep(2);
                 }}
               >
@@ -95,13 +112,17 @@ export function LeadConsultationForm() {
               </button>
             ))}
           </div>
-          <p className="text-center text-xs text-brand-muted mt-6">Kompletní analýza vaší situace zdarma. Bez závazků.</p>
+          <p className="text-center text-xs text-brand-muted mt-6">
+            Úvodní orientace bez poplatku. Bez závazku pokračovat — rozhodnutí je vždy na vás.
+          </p>
         </div>
       )}
       {step === 2 && (
         <div>
-          <h3 className="text-xl font-bold text-brand-navy mb-2">Skvělá volba.</h3>
-          <p className="text-brand-muted mb-6">Kam vám mám poslat volné termíny pro 15minutový hovor?</p>
+          <h3 className="text-xl font-bold text-brand-navy mb-2">Poslední krok</h3>
+          <p className="text-brand-muted mb-6">
+            Kam vám napíšu návrh termínu krátkého hovoru? Obvykle stačí 15 minut — podle vašeho času, osobně nebo online.
+          </p>
           <form className="space-y-4 text-left" onSubmit={onSubmit}>
             <input type="hidden" name="topic" value={topic} readOnly />
             <label className="sr-only" htmlFor="lead-hp">
@@ -175,9 +196,9 @@ export function LeadConsultationForm() {
             </div>
             {error && <p className="text-red-600 text-sm">{error}</p>}
             <button type="submit" disabled={busy} className="lead-cta-btn w-full py-4 px-6 rounded-xl text-white font-bold transition">
-              {busy ? "Odesílám…" : "Nezávazná konzultace"}
+              {busy ? "Odesílám…" : cta.homeLeadSubmit}
             </button>
-            <p className="text-center text-xs text-brand-muted">Ozvu se do 24 hodin.</p>
+            <p className="text-center text-xs text-brand-muted">Odpovídám osobně — ne automatický systém.</p>
           </form>
         </div>
       )}

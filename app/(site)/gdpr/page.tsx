@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { legalConfig } from "@/config/legal";
+import { siteConfig } from "@/config/site";
 import { pageOg } from "@/lib/seo/page-meta";
 
 const title = "Ochrana osobních údajů";
-const description = "Informace o zpracování osobních údajů a odkaz na podrobné zásady.";
+const description =
+  "Jak zpracováváme osobní údaje na tomto webu, vaše práva a odkaz na zásady partnera BEplan.";
 
 export const metadata: Metadata = {
   title,
@@ -18,24 +21,38 @@ export default function GdprPage() {
         <div className="max-w-3xl prose prose-brand">
           <h1 className="section-title font-bold text-brand-text mb-8">Ochrana osobních údajů</h1>
           <p className="text-brand-muted leading-relaxed mb-6">
-            Správcem osobních údajů je Premium Brokers. Vaše údaje zpracováváme v souladu s GDPR za účelem odpovědi na
-            dotazy, domluvení konzultací a poskytování našich služeb.
+            Vaše soukromí bereme vážně. Tento web provozuje {siteConfig.name}. Údaje, které nám sdělíte prostřednictvím
+            formulářů (jméno, kontakt, zpráva), zpracováváme za účelem odpovědi na dotaz, domluvení konzultace a přípravy
+            návrhů v oblasti finančního poradenství — tedy v oprávněném zájmu a pro plnění smluvních kroků podle vašeho
+            zájmu o spolupráci.
           </p>
           <p className="text-brand-muted leading-relaxed mb-6">
-            Údaje neposkytujeme třetím stranám bez vašeho souhlasu. Máte právo na přístup, opravu, výmaz a přenositelnost
-            údajů. Pro uplatnění práv nás kontaktujte na pribramsky@premiumbrokers.cz. Podrobné zásady:{" "}
+            Údaje nepředáváme třetím stranám k marketingu. Technické provozní údaje (např. logy serveru) mohou zpracovávat
+            poskytovatelé hostingu v rozsahu nezbytném pro bezpečný provoz webu. Máte právo na přístup ke svým údajům,
+            opravu, výmaz, omezení zpracování a vznést námitku; kontaktujte nás na{" "}
+            <a href={`mailto:${siteConfig.contactEmail}`} className="text-brand-navy hover:underline">
+              {siteConfig.contactEmail}
+            </a>
+            .
+          </p>
+          <p className="text-brand-muted leading-relaxed mb-6">
+            Podrobné zásady zpracování osobních údajů v síti našeho partnerského zprostředkovatele najdete zde:{" "}
             <a
-              href="https://www.beplan.cz/ochrana-osobnich-udaju/"
+              href={legalConfig.partnerPrivacyUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="text-brand-navy hover:underline"
             >
-              beplan.cz/ochrana-osobnich-udaju
+              {legalConfig.partnerPrivacyUrl.replace(/^https:\/\//, "")}
             </a>
+            . Informace o cookies na tomto webu:{" "}
+            <Link href="/cookies" className="text-brand-navy hover:underline">
+              stránka Cookies
+            </Link>
             .
           </p>
-          <p className="text-brand-muted leading-relaxed">
-            Podrobné zásady zpracování osobních údajů doplňte dle vašich potřeb a právních požadavků.
+          <p className="text-sm text-brand-muted leading-relaxed border-l-4 border-brand-cyan/40 pl-4 py-1">
+            {legalConfig.regulatoryDisclaimerFull}
           </p>
           <Link
             href="/kontakt"

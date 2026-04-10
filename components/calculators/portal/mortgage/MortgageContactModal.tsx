@@ -39,11 +39,11 @@ export function MortgageContactModal({ open, onClose, bankName, state, onSubmitS
       open={open}
       onClose={onClose}
       calculatorType="mortgage"
-      title="Mám zájem o nabídku"
+      title="Probrat hypotéku a další kroky"
       subtitle={
         bankName
-          ? `Vybraná banka: ${bankName}. Ozvu se s dalšími kroky.`
-          : "Obecná poptávka — srovnání a konzultace."
+          ? `Kontext: ${bankName}. Ozvu se s tím, co dává smysl dál — bez tlaku na konkrétní produkt.`
+          : "Obecná poptávka — srovnání variant a konzultace k vaší situaci."
       }
       resultSummary={resultSummary}
       metadata={metadata}

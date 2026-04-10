@@ -6,7 +6,7 @@ HTML vs Next.js (manual)
 CRM vs marketing Next
 - /portal/calculators/* vs components/calculators/portal (bez PDF exportu na webu)
 - /api/calculators/rates vs advisor-crm (Kurzy + FORCE_STATIC_RATES, MORTGAGE_RATES_OVERRIDE_JSON)
-- FormSubmit: modaly používají FORMSUBMIT_AJAX (+ volitelně NEXT_PUBLIC_FORMSUBMIT_URL)
+- Veřejné leady: Next používá POST /api/leads (+ Resend); FormSubmit už není v produkčním toku.
 
 Animace / reduced motion
 - prefers-reduced-motion v legacy CSS; kalkulačky bez GSAP na podstránkách

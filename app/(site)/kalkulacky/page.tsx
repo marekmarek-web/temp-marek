@@ -3,7 +3,8 @@ import Link from "next/link";
 import { pageOg } from "@/lib/seo/page-meta";
 
 const title = "Kalkulačky";
-const description = "Hypotéka, investice, životní pojištění, penze – orientační výpočty.";
+const description =
+  "Orientační kalkulačky: hypotéka, investice, životní pojištění, penze. Výstup je vstup do konzultace, ne finální nabídka.";
 
 export const metadata: Metadata = {
   title,
@@ -18,9 +19,13 @@ export default function KalkulackyPage() {
         <div className="text-center mb-16">
           <h1 className="section-title font-bold text-brand-text mb-4">Kalkulačky</h1>
           <p className="text-brand-muted max-w-2xl mx-auto text-lg">
-            Pomůcky pro orientaci v investicích, hypotékách, pojištění a penzi.
+            Spočítejte si řád velikostí — a pak to projděte s člověkem, který zná váš kontext a ne jen čísla.
           </p>
         </div>
+        <p className="text-center text-sm text-brand-muted max-w-2xl mx-auto mb-10">
+          Výsledky jsou orientační a nejsou závaznou nabídkou produktu ani investičním doporučením. Před rozhodnutím je vhodné
+          projít konkrétní parametry s poradcem — výstupy slouží k pochopení řádů velikostí a variant.
+        </p>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <Link
             href="/hypotecnikalkulacka"
@@ -91,6 +96,13 @@ export default function KalkulackyPage() {
             <p className="text-brand-muted text-sm">Výpočet doplňkového penzijního spoření a státních příspěvků.</p>
           </Link>
         </div>
+        <p className="mt-14 text-center text-sm text-brand-muted max-w-2xl mx-auto leading-relaxed">
+          Výsledek je orientační — nezávislá investiční doporučení z něj nevzniknou. Chcete ho proměnit v konkrétní plán?{" "}
+          <Link href="/kontakt" className="font-semibold text-brand-navy hover:text-brand-cyan">
+            Napište nám
+          </Link>{" "}
+          nebo využijte formulář na úvodní stránce — odpovídám osobně.
+        </p>
       </div>
     </main>
   );

@@ -209,7 +209,7 @@ export function PensionInputPanel({
               value={state.scenario}
               onChange={(id) => update({ scenario: id as PensionState["scenario"] })}
               options={SCENARIO_OPTIONS.map((opt) => ({ id: opt.value, label: opt.label }))}
-              placeholder="Scénář"
+              placeholder="Vyberte scénář"
               icon={PiggyBank}
             />
           </div>

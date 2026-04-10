@@ -30,8 +30,8 @@ Sdílené: `CalculatorLeadModal` + `AppModal` (ESC, backdrop, focus trap), `lib/
 
 ## Co zůstává na další fázi
 
-- `**ContactPageForm`**: stále může používat `submitToFormSubmit` — sjednotit na `/api/leads` se `source: "contact_page"`.
-- **Supabase ukládání leadů** — připraveno rozšířením API; zatím jen e-mail.
+- **Kontakt** je sjednocený na `/api/leads` (`ContactPageForm`).
+- **Supabase ukládání leadů** — hotové (`public.leads` + admin inbox); viz `docs/lead-workflow.md`.
 - **SEO / obsah** kalkulaček — mimo scope.
 - **Produkční Resend**: ověřená doména odesílatele (`RESEND_FROM`).
 

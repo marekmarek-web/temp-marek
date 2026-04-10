@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { LeadConsultationForm } from "@/components/forms/LeadConsultationForm";
 import { HomeBlogSection, HomeBlogSectionFallback } from "@/components/home/HomeBlogSection";
 import { timelineEntries } from "@/components/home/home-data";
+import { timelinePhotoAlt } from "@/lib/media/a11y";
 import { PersonaSwitcher } from "@/components/home/PersonaSwitcher";
 import { ReviewsMarquee } from "@/components/home/ReviewsMarquee";
 import { ServicesAccordion } from "@/components/home/ServicesAccordion";
@@ -15,9 +16,10 @@ export function HomeTailSections() {
         <div className="persona-section-bg" aria-hidden />
         <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <div className="mb-10 text-center lg:mb-14">
-            <h2 className="section-title mb-4 font-bold text-brand-text">Pro koho</h2>
-            <p className="section-desc mx-auto text-lg leading-relaxed text-brand-muted">
-              Vyberte profil — zobrazí se konkrétní přínosy, situace a další krok.
+            <h2 className="section-title mb-4 font-bold text-brand-text">Pro koho pracuji</h2>
+            <p className="section-desc mx-auto max-w-2xl text-lg leading-relaxed text-brand-muted">
+              Vyberte profil — uvidíte, co z plánování získáte, jaké situace řeším nejčastěji a jak můžeme navázat
+              konzultací.
             </p>
           </div>
           <PersonaSwitcher />
@@ -54,7 +56,7 @@ function SluzbySection() {
           </span>
           <h2 className="section-title mb-2 font-bold text-white drop-shadow-md">Moje služby</h2>
           <p className="mx-auto max-w-2xl text-sm text-white/85 sm:text-base">
-            Rozklikněte službu — krátký popis a jasný další krok.
+            Rozklikněte oblast — stručný popis a další krok (orientační kalkulačka nebo osobní konzultace).
           </p>
         </div>
         <ServicesAccordion />
@@ -79,6 +81,9 @@ function MojeCestaSection() {
             <br />
             <span className="font-bold italic text-brand-cyan">Klíčové milníky</span>
           </h2>
+          <p className="mx-auto mt-4 max-w-xl text-sm text-slate-600 sm:text-base">
+            Kontext praxe a týmu — abyste věděli, s kým řešíte finance, ne jen „anonymní call centrum“.
+          </p>
         </div>
         <div
           className="moje-cesta-box max-h-[min(72vh,680px)] min-h-[360px] overflow-y-auto rounded-3xl border border-slate-200/90 bg-white p-4 shadow-sm sm:p-6 lg:p-8"
@@ -96,11 +101,12 @@ function MojeCestaSection() {
                 <div className="relative mb-4 aspect-[16/10] w-full overflow-hidden rounded-2xl bg-slate-100">
                   <Image
                     src={it.img}
-                    alt={it.title}
+                    alt={timelinePhotoAlt(it.title, it.year)}
                     fill
                     className={`object-cover ${it.imagePositionClass}`}
                     sizes="(max-width: 768px) 100vw, 640px"
                     loading="lazy"
+                    quality={78}
                   />
                 </div>
                 <h3 className="text-xl font-bold text-brand-navy sm:text-2xl">{it.title}</h3>
@@ -130,7 +136,15 @@ function PobockySection() {
             className="bento-card bento-card--large"
           >
             <div className="bento-card-img">
-              <Image src="/img/rce.jpg" alt="Roudnice nad Labem – náměstí" width={800} height={600} loading="lazy" />
+              <Image
+                src="/img/rce.jpg"
+                alt="Roudnice nad Labem, pohled na náměstí"
+                width={800}
+                height={600}
+                loading="lazy"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                quality={78}
+              />
               <div className="bento-card-overlay" />
             </div>
             <div className="bento-card-content">
@@ -145,7 +159,15 @@ function PobockySection() {
           </a>
           <a href="https://www.google.com/maps?q=%C5%BDateck%C3%A1+55%2F14,+110+00+Praha" target="_blank" rel="noopener noreferrer" className="bento-card">
             <div className="bento-card-img">
-              <Image src="/img/praha.jpg" alt="Praha – panorama od Petřína" width={600} height={400} />
+              <Image
+                src="/img/praha.jpg"
+                alt="Praha, panorama města"
+                width={600}
+                height={400}
+                loading="lazy"
+                sizes="(max-width: 1024px) 100vw, 40vw"
+                quality={78}
+              />
               <div className="bento-card-overlay" />
             </div>
             <div className="bento-card-content">
@@ -159,7 +181,15 @@ function PobockySection() {
           </a>
           <a href="https://www.google.com/maps?q=5.+kv%C4%9Btna+10,+412+01+Litom%C4%9B%C5%99ice" target="_blank" rel="noopener noreferrer" className="bento-card">
             <div className="bento-card-img">
-              <Image src="/img/lito.png" alt="Litoměřice – Mírové náměstí" width={600} height={400} loading="lazy" />
+              <Image
+                src="/img/lito.png"
+                alt="Litoměřice, Mírové náměstí"
+                width={600}
+                height={400}
+                loading="lazy"
+                sizes="(max-width: 1024px) 100vw, 40vw"
+                quality={78}
+              />
               <div className="bento-card-overlay" />
             </div>
             <div className="bento-card-content">
@@ -173,7 +203,15 @@ function PobockySection() {
           </a>
           <a href="https://www.google.com/maps?q=U+Tr%C5%BEnice+701,+411+08+%C5%A0t%C4%9Bt%C3%AD" target="_blank" rel="noopener noreferrer" className="bento-card">
             <div className="bento-card-img">
-              <Image src="/img/steti.jpg" alt="Štětí – region Litoměřicko" width={600} height={400} loading="lazy" />
+              <Image
+                src="/img/steti.jpg"
+                alt="Štětí, okolí města"
+                width={600}
+                height={400}
+                loading="lazy"
+                sizes="(max-width: 1024px) 100vw, 40vw"
+                quality={78}
+              />
               <div className="bento-card-overlay" />
             </div>
             <div className="bento-card-content">
@@ -187,7 +225,15 @@ function PobockySection() {
           </a>
           <div className="bento-card bento-card-coming">
             <div className="bento-card-img">
-              <Image src="/img/lovo.jpg" alt="Lovosice – Lovoš a okolí" width={600} height={400} loading="lazy" />
+              <Image
+                src="/img/lovo.jpg"
+                alt="Lovosice, pohled na Lovoš a okolí"
+                width={600}
+                height={400}
+                loading="lazy"
+                sizes="(max-width: 1024px) 100vw, 40vw"
+                quality={78}
+              />
               <div className="bento-card-overlay" />
             </div>
             <div className="bento-card-content">
@@ -208,7 +254,9 @@ function ReferenceSection() {
         <div className="text-center mb-10 lg:mb-12 animate-fade-in-up">
           <span className="inline-block px-3 py-1 rounded-full bg-white/15 text-white text-xs font-semibold mb-3">Google Recenze</span>
           <h2 className="section-title font-bold text-white mb-3">Reference</h2>
-          <p className="text-white/80 text-base lg:text-lg max-w-xl mx-auto">Co říkají klienti o spolupráci se mnou.</p>
+          <p className="text-white/80 text-base lg:text-lg max-w-xl mx-auto">
+            Ověřená hodnocení na Google — reální klienti, ne marketingové citace.
+          </p>
         </div>
         <div className="reference-marquee reference-marquee-white rounded-3xl border border-slate-200/80 bg-white py-10 px-2 md:px-4 relative overflow-hidden shadow-sm">
           <div className="reference-marquee-fade reference-marquee-fade-left" />
@@ -381,10 +429,23 @@ function KontaktSection() {
   return (
     <section
       id="kontakt"
-      className="lead-form-section py-12 sm:py-16 md:py-20 lg:py-24 xl:py-32 relative overflow-hidden min-h-[520px] sm:min-h-[560px] lg:min-h-[640px] flex items-center"
+      className="lead-form-section relative py-12 sm:py-16 md:py-20 lg:py-24 xl:py-32 overflow-hidden min-h-[520px] sm:min-h-[560px] lg:min-h-[640px] flex items-center"
     >
+      {/* Legacy anchor z původního webu (#lead-form) — stejná sekce jako #kontakt */}
+      <div
+        id="lead-form"
+        className="pointer-events-none absolute left-0 top-0 h-px w-full scroll-mt-28 md:scroll-mt-32"
+        aria-hidden
+      />
       <div className="lead-form-bg" aria-hidden />
       <div className="max-w-2xl mx-auto px-4 sm:px-6 relative z-10 w-full">
+        <div className="mb-6 text-center sm:mb-8">
+          <h2 className="text-2xl font-bold text-white sm:text-3xl">Nezávazná konzultace</h2>
+          <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-white/85 sm:text-base">
+            Vyberte téma a nechte kontakt — odpovím osobně (ne automat), obvykle do jednoho pracovního dne. Žádný tlak na
+            podpis hned na první schůzce.
+          </p>
+        </div>
         <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden smart-cta-container">
           <div className="p-5 sm:p-8 lg:p-12 flex flex-col justify-center">
             <LeadConsultationForm />

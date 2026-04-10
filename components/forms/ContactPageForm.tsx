@@ -1,11 +1,19 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
-import {
-  buildContactPagePayload,
-  pageUrl,
-  submitToFormSubmit,
-} from "@/lib/forms/leadSubmit";
+import { cta } from "@/config/cta";
+import { legalConfig } from "@/config/legal";
+import { siteConfig } from "@/config/site";
+import { pageUrl } from "@/lib/forms/page-url";
+import { postLeadJson } from "@/lib/forms/postLeadApi";
+
+function splitContact(contact: string): { email: string; phone: string | undefined } {
+  const t = contact.trim();
+  if (!t) return { email: "", phone: undefined };
+  if (t.includes("@")) return { email: t, phone: undefined };
+  return { email: "", phone: t };
+}
 
 export function ContactPageForm() {
   const [name, setName] = useState("");
@@ -15,20 +23,35 @@ export function ContactPageForm() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
+  const [openedAt] = useState(() => Date.now());
+  const [companyWebsite, setCompanyWebsite] = useState("");
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
     setBusy(true);
     try {
-      const payload = buildContactPagePayload({
-        name,
-        contact,
-        message,
+      const { email, phone } = splitContact(contact);
+      const res = await postLeadJson({
+        source: "contact_page",
+        name: name.trim(),
+        email,
+        phone,
+        note: message.trim() || undefined,
         consent,
-        pageHref: pageUrl(),
+        sourcePath: pageUrl(),
+        resultSummary: "Kontaktní stránka (/kontakt)",
+        companyWebsite: companyWebsite.trim() || undefined,
+        formOpenedAt: openedAt,
       });
-      await submitToFormSubmit(payload);
+      if (!res.ok) {
+        if (res.error === "email_not_configured") {
+          setError(`Odesílání zatím není nakonfigurované. Napište na ${siteConfig.contactEmail}.`);
+        } else {
+          setError("Nepodařilo se odeslat. Zkuste to prosím znovu.");
+        }
+        return;
+      }
       setDone(true);
     } catch {
       setError("Nepodařilo se odeslat. Zkuste to prosím znovu.");
@@ -45,14 +68,26 @@ export function ContactPageForm() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h3 className="text-xl font-bold text-brand-text mb-2">Zpráva odeslána</h3>
-        <p className="text-brand-muted">Ozveme se vám co nejdříve.</p>
+        <h3 className="text-xl font-bold text-brand-text mb-2">Děkujeme — zpráva je u nás</h3>
+        <p className="text-brand-muted">Ozveme se obvykle do jednoho pracovního dne.</p>
       </div>
     );
   }
 
   return (
-    <form id="lead-form-el" className="space-y-5" onSubmit={onSubmit}>
+    <form id="lead-form-el" className="space-y-5 relative" onSubmit={onSubmit}>
+      <label htmlFor="contact-hp" className="sr-only">
+        Nepřepisujte
+      </label>
+      <input
+        id="contact-hp"
+        type="text"
+        tabIndex={-1}
+        value={companyWebsite}
+        onChange={(e) => setCompanyWebsite(e.target.value)}
+        className="absolute h-px w-px overflow-hidden opacity-0"
+        autoComplete="off"
+      />
       <div>
         <label htmlFor="lead-name" className="block text-sm font-semibold text-brand-text mb-1.5">
           Jméno
@@ -102,14 +137,18 @@ export function ContactPageForm() {
           className="mt-1 w-4 h-4 rounded border-brand-border text-brand-navy focus:ring-brand-cyan"
         />
         <label htmlFor="lead-consent" className="text-sm text-brand-muted">
-          Souhlasím se zpracováním osobních údajů.{" "}
+          Souhlasím se zpracováním osobních údajů. Podrobnosti:{" "}
+          <Link href="/gdpr" className="text-brand-navy hover:underline">
+            ochrana údajů na webu
+          </Link>
+          , kompletní zásady partnera:{" "}
           <a
-            href="https://www.beplan.cz/ochrana-osobnich-udaju/"
+            href={legalConfig.partnerPrivacyUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="text-brand-navy hover:underline"
           >
-            Více o ochraně údajů
+            BEplan
           </a>
           .
         </label>
@@ -120,7 +159,7 @@ export function ContactPageForm() {
         disabled={busy}
         className="w-full py-4 px-6 rounded-2xl bg-brand-navy text-white font-bold hover:bg-brand-navy/90 disabled:opacity-75"
       >
-        {busy ? "Odesílám…" : "Odeslat"}
+        {busy ? "Odesílám…" : cta.messageSubmit}
       </button>
     </form>
   );

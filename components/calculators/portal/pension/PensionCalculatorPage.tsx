@@ -1,6 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { CalculatorEngagement } from "@/components/analytics/CalculatorEngagement";
+import { AnalyticsEvents } from "@/lib/analytics/events";
+import { track } from "@/lib/analytics/track";
 import { CalculatorPageShell } from "../core/CalculatorPageShell";
 import { CalculatorMobileResultDock } from "../core/CalculatorMobileResultDock";
 import { PensionContactModal } from "./PensionContactModal";
@@ -15,8 +18,14 @@ export function PensionCalculatorPage() {
   const [leadOpen, setLeadOpen] = useState(false);
   const result = useMemo(() => runCalculations(state), [state]);
 
+  const openLead = () => {
+    track(AnalyticsEvents.calculatorCtaClick, { calculator: "pension" });
+    setLeadOpen(true);
+  };
+
   return (
     <>
+      <CalculatorEngagement calculator="pension" />
       <div className="pt-0 pb-56 lg:pb-0">
         <CalculatorPageShell>
           <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-[1fr_360px]">
@@ -26,13 +35,13 @@ export function PensionCalculatorPage() {
               estimatedPension={result.estimatedPension}
             />
             <div className="hidden lg:block sticky top-6">
-              <PensionResultsPanel result={result} onCtaPrimary={() => setLeadOpen(true)} />
+              <PensionResultsPanel result={result} onCtaPrimary={openLead} />
             </div>
           </div>
         </CalculatorPageShell>
 
         <CalculatorMobileResultDock>
-          <PensionResultsPanel result={result} onCtaPrimary={() => setLeadOpen(true)} />
+          <PensionResultsPanel result={result} onCtaPrimary={openLead} />
         </CalculatorMobileResultDock>
       </div>
       <PensionContactModal

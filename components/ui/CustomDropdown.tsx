@@ -19,7 +19,7 @@ export function CustomDropdown({
   value,
   onChange,
   options,
-  placeholder = "— Vybrat —",
+  placeholder = "— Vyberte —",
   icon: Icon,
   direction = "down",
   variant = "input",
@@ -31,8 +31,8 @@ export function CustomDropdown({
   const isInput = variant === "input";
 
   const buttonClasses = isInput
-    ? `w-full px-4 py-3 bg-slate-50 border border-slate-200 hover:border-indigo-300 rounded-xl text-sm font-bold transition-all focus:bg-white focus:ring-2 focus:ring-indigo-100 focus:border-indigo-400 flex items-center justify-between min-h-[44px] ${isPlaceholder ? "text-slate-400" : "text-slate-800"}`
-    : "flex items-center gap-2 px-4 py-2.5 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100 rounded-xl text-xs font-bold text-indigo-700 transition-all shadow-sm active:scale-95 min-h-[44px]";
+    ? `w-full px-4 py-3 bg-slate-50 border border-slate-200 hover:border-brand-cyan/40 rounded-xl text-sm font-bold transition-all focus:bg-white focus:ring-2 focus:ring-brand-cyan/25 focus:border-brand-cyan flex items-center justify-between min-h-[44px] ${isPlaceholder ? "text-slate-400" : "text-slate-800"}`
+    : "flex items-center gap-2 px-4 py-2.5 bg-brand-navy/5 hover:bg-brand-navy/10 border border-brand-border rounded-xl text-xs font-bold text-brand-navy transition-all shadow-sm active:scale-95 min-h-[44px]";
 
   return (
     <div className="relative">
@@ -58,7 +58,7 @@ export function CustomDropdown({
             {Icon && (
               <Icon
                 size={14}
-                className={!isPlaceholder ? "fill-indigo-200 shrink-0" : "shrink-0"}
+                className={!isPlaceholder ? "text-brand-cyan/80 shrink-0" : "shrink-0"}
               />
             )}
             <span className="truncate">{selected ? selected.label : placeholder}</span>
@@ -74,7 +74,7 @@ export function CustomDropdown({
         <>
           <div className="fixed inset-0 z-[110]" onClick={() => setIsOpen(false)} aria-hidden />
           <div
-            className={`absolute ${isInput ? "left-0 w-full" : "left-0 w-56"} bg-white border border-slate-100 rounded-2xl shadow-xl shadow-indigo-900/10 py-2 z-[120] max-h-60 overflow-y-auto custom-dropdown-scroll
+            className={`absolute ${isInput ? "left-0 w-full" : "left-0 w-56"} bg-white border border-brand-border/80 rounded-2xl shadow-xl shadow-slate-900/10 py-2 z-[120] max-h-60 overflow-y-auto custom-dropdown-scroll
               ${direction === "up" ? "bottom-full mb-2" : "top-full mt-2"}
             `}
           >
@@ -87,11 +87,11 @@ export function CustomDropdown({
                   setIsOpen(false);
                 }}
                 className={`w-full flex items-center justify-between px-4 py-2.5 text-sm font-bold transition-colors hover:bg-slate-50 text-left
-                  ${value === opt.id ? "text-indigo-600 bg-indigo-50/50" : "text-slate-600"}
+                  ${value === opt.id ? "text-brand-navy bg-brand-cyan/10" : "text-slate-600"}
                 `}
               >
                 <span className="truncate pr-4">{opt.label}</span>
-                {value === opt.id && <Check size={16} strokeWidth={3} className="shrink-0" />}
+                {value === opt.id && <Check size={16} strokeWidth={3} className="shrink-0 text-brand-navy" />}
               </button>
             ))}
           </div>

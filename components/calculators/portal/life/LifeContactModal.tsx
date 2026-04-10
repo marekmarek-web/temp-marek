@@ -16,15 +16,15 @@ export interface LifeContactModalProps {
 }
 
 const TITLES: Record<LifeModalType, string> = {
-  general: "Mám zájem o nabídku",
-  proposal: "Získejte nezávazný návrh",
-  check: "Kontrola smlouvy",
+  general: "Probrat životní pojištění",
+  proposal: "Nezávazný návrh krytí",
+  check: "Kontrola stávající smlouvy",
 };
 
 const SUBTITLES: Record<LifeModalType, string> = {
-  general: "Nechte mi kontakt, ozvu se vám.",
-  proposal: "Na základě vašich údajů připravím návrh.",
-  check: "Nahrajte smlouvu (volitelně) a ozvu se s termínem kontroly.",
+  general: "Nechte kontakt — projdeme výpočet a reálné potřeby vaší rodiny.",
+  proposal: "Z vašich vstupů připravím orientační návrh; doladíme na schůzce.",
+  check: "Volitelně nahrajte smlouvu — ozvu se s termínem kontroly a shrnutím.",
 };
 
 const INTENT_MAP: Record<LifeModalType, "general" | "proposal" | "check"> = {

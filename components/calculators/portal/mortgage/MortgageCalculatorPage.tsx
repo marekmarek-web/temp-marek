@@ -1,6 +1,10 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
+import { CalculatorEngagement } from "@/components/analytics/CalculatorEngagement";
+import { AnalyticsEvents } from "@/lib/analytics/events";
+import { track } from "@/lib/analytics/track";
 import { CalculatorGoogleReviewBadge } from "../core/CalculatorGoogleReviewBadge";
 import { CalculatorMarketingHero } from "../core/CalculatorMarketingHero";
 import { CalculatorPageShell } from "../core/CalculatorPageShell";
@@ -10,7 +14,11 @@ import { MortgageHeroTopControls } from "./MortgageHeroTopControls";
 import { MortgageInputPanel } from "./MortgageInputPanel";
 import { MortgageResultsPanel } from "./MortgageResultsPanel";
 import { MortgageBankOffers } from "./MortgageBankOffers";
-import { MortgageAmortSection } from "./MortgageAmortSection";
+
+const MortgageAmortSection = dynamic(
+  () => import("./MortgageAmortSection").then((m) => m.MortgageAmortSection),
+  { loading: () => <div className="h-48 animate-pulse rounded-lg bg-slate-50" aria-hidden /> },
+);
 import {
   BANKS_DATA,
   DEFAULT_STATE,
@@ -96,12 +104,17 @@ export function MortgageCalculatorPage() {
   const ratesMeta = rankedBanks?.[0];
 
   const openLead = (bank: string | null) => {
+    track(AnalyticsEvents.calculatorCtaClick, {
+      calculator: "mortgage",
+      bank: bank ? bank.slice(0, 40) : "consult",
+    });
     setLeadBankName(bank);
     setLeadOpen(true);
   };
 
   return (
     <>
+    <CalculatorEngagement calculator="mortgage" />
     <div className="pt-0 pb-56 lg:pb-0">
       <CalculatorPageShell>
         <CalculatorMarketingHero badge={<CalculatorGoogleReviewBadge />}>

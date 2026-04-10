@@ -1,7 +1,6 @@
 "use client";
 
-const GOOGLE_G =
-  "https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg";
+import { GoogleMark } from "@/components/ui/GoogleMark";
 
 export function CalculatorGoogleReviewBadge() {
   return (
@@ -12,8 +11,7 @@ export function CalculatorGoogleReviewBadge() {
       className="review-badge flex min-w-[240px] items-center gap-4 rounded-xl bg-white px-4 py-3 text-slate-800 shadow-lg no-underline transition-colors group"
     >
       <div className="shrink-0 rounded-full border border-slate-100 bg-white p-1.5">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={GOOGLE_G} alt="Google" className="h-5 w-5" width={20} height={20} />
+        <GoogleMark className="h-5 w-5" />
       </div>
       <div>
         <div className="mb-0.5 flex items-center gap-1.5">

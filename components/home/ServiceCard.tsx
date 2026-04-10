@@ -30,7 +30,7 @@ export function ServiceCard({ item, open, onToggle, panelId, triggerId }: Servic
       >
         <div className="mb-2 flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-cyan/10 sm:h-14 sm:w-14">
           <svg className="h-6 w-6 text-brand-navy sm:h-7 sm:w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={item.iconD} />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.iconD} />
           </svg>
         </div>
         <h3 className="text-lg font-bold text-brand-navy sm:text-xl">{item.title}</h3>

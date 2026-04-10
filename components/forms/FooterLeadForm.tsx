@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { pageUrl } from "@/lib/forms/leadSubmit";
+import { cta } from "@/config/cta";
+import { siteConfig } from "@/config/site";
+import { pageUrl } from "@/lib/forms/page-url";
 import { postLeadJson } from "@/lib/forms/postLeadApi";
 
 export function FooterLeadForm() {
@@ -38,11 +40,11 @@ export function FooterLeadForm() {
         sourcePath: pageUrl(),
         companyWebsite: companyWebsite.trim() || undefined,
         formOpenedAt: openedAt,
-        resultSummary: `Zájem z patičky: ${interest || "neuvedeno"}`,
+        resultSummary: `Patička — téma: ${interest || "neuvedeno"}`,
       });
       if (!res.ok) {
         if (res.error === "email_not_configured") {
-          setErr("E-mailový odesílání není na serveru nastavené. Napište na pribramsky@premiumbrokers.cz.");
+          setErr(`E-mailový odesílání není na serveru nastavené. Napište na ${siteConfig.contactEmail}.`);
         } else {
           setErr("Odeslání se nepodařilo. Zkuste to znovu.");
         }
@@ -52,7 +54,7 @@ export function FooterLeadForm() {
       setEmail("");
       setPhone("");
       setInterest("");
-      setMsg("Děkujeme, brzy se ozveme.");
+      setMsg("Děkujeme — ozveme se obvykle do jednoho pracovního dne.");
     } catch {
       setErr("Chyba spojení. Zkuste to znovu.");
     } finally {
@@ -116,7 +118,7 @@ export function FooterLeadForm() {
       </div>
       <div className="sm:col-span-1">
         <label htmlFor="footer-interest" className="mb-1 block text-slate-400">
-          Zájem
+          Téma (volitelně)
         </label>
         <select
           id="footer-interest"
@@ -140,7 +142,7 @@ export function FooterLeadForm() {
           disabled={busy}
           className="mt-1 w-full min-h-[44px] rounded-xl bg-brand-cyan py-2.5 font-semibold text-brand-navy transition hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-navy disabled:opacity-70"
         >
-          {busy ? "Odesílám…" : "Odeslat"}
+          {busy ? "Odesílám…" : cta.messageSubmit}
         </button>
       </div>
     </form>

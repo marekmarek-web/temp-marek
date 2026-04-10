@@ -33,6 +33,7 @@ export function CalculatorMarketingHero({
           alt=""
           width={512}
           height={512}
+          sizes="(max-width: 768px) 200px, 280px"
           className="absolute -bottom-8 -right-8 h-auto w-[min(22rem,52vw)] max-w-[240px] opacity-[0.14] sm:max-w-[280px] md:w-[min(26rem,40%)]"
           priority={false}
         />

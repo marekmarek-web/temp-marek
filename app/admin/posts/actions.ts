@@ -1,6 +1,7 @@
 "use server";
 
 import { requireEditor } from "@/lib/admin/require-editor";
+import { POST_DISTRIBUTION_STATUSES } from "@/lib/content/distribution";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -37,6 +38,12 @@ const postSchema = z.object({
   featured: z.boolean().optional(),
   og_image_url: z.string().trim().max(2000).optional().nullable(),
   content_type: z.enum(["blog", "article", "insight"]).default("blog"),
+  distribution_status: z.enum(POST_DISTRIBUTION_STATUSES as unknown as [string, ...string[]]).default("none"),
+  promoted_at: z.preprocess(
+    (v) => (v === "" || v == null ? null : String(v)),
+    z.string().max(50).nullable()
+  ),
+  newsletter_ready: z.boolean().optional(),
   _intent: z.preprocess(
     (v) => (v === "" || v == null ? "save" : String(v)),
     z.enum(["save", "draft", "publish"])
@@ -86,6 +93,9 @@ export async function savePostAction(_prev: SavePostState, formData: FormData): 
     featured: formData.get("featured") === "on",
     og_image_url: formData.get("og_image_url") || null,
     content_type: formData.get("content_type") ?? "blog",
+    distribution_status: formData.get("distribution_status") ?? "none",
+    promoted_at: formData.get("promoted_at") || null,
+    newsletter_ready: formData.get("newsletter_ready") === "on",
     _intent: formData.get("_intent"),
   };
 
@@ -98,6 +108,11 @@ export async function savePostAction(_prev: SavePostState, formData: FormData): 
   let publishedAt =
     parsed.data.published_at && String(parsed.data.published_at).trim()
       ? new Date(parsed.data.published_at).toISOString()
+      : null;
+
+  const promotedAt =
+    parsed.data.promoted_at && String(parsed.data.promoted_at).trim()
+      ? new Date(parsed.data.promoted_at).toISOString()
       : null;
 
   const { published, published_at: finalPublishedAt } = resolvePublishedAndDate(parsed.data, publishedAt);
@@ -132,20 +147,31 @@ export async function savePostAction(_prev: SavePostState, formData: FormData): 
     content_type: parsed.data.content_type,
     author_id: user.id,
     author_name: authorName,
+    distribution_status: parsed.data.distribution_status,
+    promoted_at: promotedAt,
+    newsletter_ready: parsed.data.newsletter_ready ?? false,
   };
 
   if (parsed.data.id) {
     const { error } = await supabase.from("posts").update(row).eq("id", parsed.data.id);
     if (error) return { error: error.message };
-  } else {
-    const { error } = await supabase.from("posts").insert(row);
-    if (error) return { error: error.message };
+    revalidatePath("/blog");
+    revalidatePath("/");
+    revalidatePath(`/blog/${row.slug as string}`);
+    revalidatePath("/admin/posts");
+    revalidatePath(`/admin/posts/${parsed.data.id}/edit`);
+    redirect(`/admin/posts/${parsed.data.id}/edit?saved=1`);
   }
+
+  const { data: inserted, error } = await supabase.from("posts").insert(row).select("id").single();
+  if (error) return { error: error.message };
+  const newId = inserted.id as string;
 
   revalidatePath("/blog");
   revalidatePath("/");
   revalidatePath(`/blog/${row.slug as string}`);
-  redirect("/admin/posts");
+  revalidatePath("/admin/posts");
+  redirect(`/admin/posts/${newId}/edit?created=1`);
 }
 
 export async function deletePostAction(formData: FormData): Promise<void> {
@@ -159,7 +185,8 @@ export async function deletePostAction(formData: FormData): Promise<void> {
   revalidatePath("/blog");
   revalidatePath("/");
   if (row?.slug) revalidatePath(`/blog/${row.slug}`);
-  redirect("/admin/posts");
+  revalidatePath("/admin/posts");
+  redirect("/admin/posts?deleted=1");
 }
 
 export async function uploadBlogCoverAction(formData: FormData): Promise<{ url?: string; error?: string }> {

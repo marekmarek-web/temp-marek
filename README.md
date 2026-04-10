@@ -1,46 +1,60 @@
 # Marek Příbramský – Premium Brokers
 
-Osobní web finančního poradce. **Hlavní vývoj probíhá v Next.js (App Router, TypeScript).** Původní statické HTML v repozitáři zůstává jako reference během migrace.
+Osobní web finančního poradce. **Next.js (App Router, TypeScript).**
 
-## Next.js (doporučeno)
+## Lokální vývoj
 
 ```bash
 pnpm install
-cp .env.example .env.local   # doplňte proměnné níže
+cp .env.example .env.local   # doplňte hodnoty
 pnpm dev                      # http://localhost:3000
 pnpm build && pnpm start
-pnpm test                     # Vitest – golden testy kalkulaček
+pnpm test                     # Vitest
 ```
 
-- Aplikace: `app/`, sdílené komponenty: `components/`, konfigurace navigace: `config/site.ts`, výpočty: `lib/calculators/`, obrázky: `public/img/`.
-- **Blog a CMS (Supabase):** migrace `supabase/migrations/`, návod [docs/admin-setup.md](docs/admin-setup.md).
-- **SEO:** metadata a OG přes `lib/seo/page-meta.ts`, veřejné `/sitemap.xml` a `/robots.txt`. Před go-live: [docs/release-readiness-checklist.md](docs/release-readiness-checklist.md).
-- **Finální audit / výkon:** [docs/final-parity-audit.md](docs/final-parity-audit.md), [docs/performance-pass.md](docs/performance-pass.md), shrnutí změn [docs/FINAL-launch-changelog.md](docs/FINAL-launch-changelog.md).
-- **Leady (kalkulačky, footer, úvodní konzultace):** `POST /api/leads` → Resend (`lib/email/sendLeadEmail.ts`). Legacy helper `lib/forms/leadSubmit.ts` zůstává pro postupnou migraci (např. kontaktní stránka).
+- Aplikace: `app/`, komponenty: `components/`, navigace: `config/site.ts`, SEO: `lib/seo/`.
+- **Blog / CMS:** Supabase — `docs/admin-setup.md`, migrace v `supabase/migrations/`.
+- **Leady:** `POST /api/leads` → Resend (`lib/email/sendLeadEmail.ts`).
 
-### Resend a lead e-maily
+## Environment (produkce)
 
-| Proměnná | Popis |
+Kompletní seznam a význam proměnných je v **`.env.example`**. Shrnutí:
+
+| Oblast | Proměnné |
+|--------|-----------|
+| Veřejné URL / SEO | `NEXT_PUBLIC_SITE_URL` |
+| Supabase (web + admin) | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (jen server) |
+| Resend (e-maily leadů) | `RESEND_API_KEY`, `RESEND_FROM`, `LEAD_EMAIL_TO` |
+| Chyby (Sentry) | `NEXT_PUBLIC_SENTRY_DSN` (volitelné) |
+| Analytika (Plausible, po souhlasu) | `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` (volitelné) |
+
+Validace při startu: `instrumentation.ts` + `lib/env/validate.ts` (varování do logu, neblokuje build).
+
+## Nasazení (Vercel)
+
+Postup: **`docs/deploy-playbook.md`**. Po nasazení: **`docs/post-deploy-smoke-tests.md`**.
+
+## Observability & analytics
+
+- **Sentry:** `sentry.*.config.ts`, runtime reporting pokud je `NEXT_PUBLIC_SENTRY_DSN`.
+- **Plausible:** načte se až po souhlasu v cookie banneru (`components/consent/`).
+- **Události:** `lib/analytics/track.ts`, názvy v `lib/analytics/events.ts`.
+
+## Dokumentace
+
+| Dokument | Obsah |
 |----------|--------|
-| `RESEND_API_KEY` | API klíč z [Resend](https://resend.com). Bez něj endpoint vrátí `503` a `error: email_not_configured`. |
-| `LEAD_EMAIL_TO` | Cílová schránka (kam přijde text leadu). |
-| `RESEND_FROM` | Volitelné; výchozí např. `Premium Brokers <onboarding@resend.dev>` jen pro vývoj. V produkci nastavte ověřenou doménu. |
+| `docs/deployment-readiness-audit.md` | Stav připravenosti na deploy |
+| `docs/deploy-playbook.md` | Vercel, env, rollback |
+| `docs/post-deploy-smoke-tests.md` | Checklist po deployi |
+| `docs/operations-troubleshooting.md` | Časté závady a recovery |
+| `docs/production-release-changelog.md` | Shrnutí ops běhu |
+| `docs/calculators-leadflow-audit.md` | Kalkulačky a lead flow |
 
-`NEXT_PUBLIC_SITE_URL` — kanonická URL pro odkazy v e-mailech / metadatech, pokud ji kód používá.
+## Legacy HTML
 
-Podrobnější stav kalkulaček: `docs/calculators-leadflow-audit.md`.
+Statické `index.html` a podsložky v repu slouží jako reference; produkční běh je Next.js.
 
-## Legacy statický web (HTML)
+## Git / repo
 
-- `index.html`, podsložky `blog/`, `kontakt/`, kalkulačky atd., `assets/`
-- CSS pro legacy: `npm run build:legacy-css` (config `tailwind.legacy.config.js`)
-
-## Struktura (legacy)
-
-- `assets/js/` – main.js, anim.js, …
-- `assets/img/` – kopie také v `public/img/` pro Next
-
-## Git a nasazení
-
-- Pro Next doporučeno **Vercel** nebo jiný Node hosting; pro čistý statický export lze později zvolit `output: 'export'`.
-- GitHub Pages dříve servírovaly root HTML – po přechodu na Next změňte zdroj nasazení.
+Cílový Next.js projekt odpovídá **`marekmarek-web/temp-marek`**; legacy reference **`marekmarek-web/marek-pribramsky`**.

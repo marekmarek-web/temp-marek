@@ -24,7 +24,7 @@ export const personaContent: PersonaContent[] = [
       "Přehledné čtvrtletní kontroly — víte, kde stojíte",
     ],
     scenarios: ["Nový přírůstek do rodiny", "Změna bydlení / rekonstrukce", "Spoření na vzdělání dětí"],
-    ctaLabel: "Chci rodinný plán",
+    ctaLabel: "Domluvit konzultaci k rodinnému plánu",
     ctaHref: "/#kontakt",
   },
   {
@@ -39,7 +39,7 @@ export const personaContent: PersonaContent[] = [
       "Jasný rámec pro majetek podnikatele i rodiny",
     ],
     scenarios: ["Růst tržeb a nutnost reinvestic", "Plánovaný výběr zisku", "Příprava na odchod z firmy"],
-    ctaLabel: "Domluvit řešení pro OSVČ / s.r.o.",
+    ctaLabel: "Probrat finance podnikatele",
     ctaHref: "/#kontakt",
   },
   {
@@ -54,7 +54,7 @@ export const personaContent: PersonaContent[] = [
       "Propojení s osobními plány klíčových lidí",
     ],
     scenarios: ["Nástup nových zaměstnanců", "Restrukturalizace", "Expanze a nové provozy"],
-    ctaLabel: "Poptat firemní audit",
+    ctaLabel: "Domluvit audit benefitů",
     ctaHref: "/#kontakt",
   },
 ];
@@ -89,7 +89,7 @@ export const serviceItems: ServiceItem[] = [
     detail:
       "Nastavení hypotéky tak, aby odpovídala cashflow a cílům — fix/varianta, refinancování, čerpání pro bydlení nebo investici.",
     ctaHref: "/hypotecnikalkulacka",
-    ctaLabel: "Hypoteční kalkulačka",
+    ctaLabel: "Spočítat splátku a náklady",
   },
   {
     id: "pojisteni",
@@ -111,7 +111,7 @@ export const serviceItems: ServiceItem[] = [
     detail:
       "Sloučení více úvěrů do přehledné struktury, nižší splátka kde to dává smysl, a plán zbavení se dluhů bez „kouzelných“ produktů.",
     ctaHref: "/#kontakt",
-    ctaLabel: "Spočítat úsporu",
+    ctaLabel: "Projednat konsolidaci",
   },
   {
     id: "penze",
@@ -122,7 +122,7 @@ export const serviceItems: ServiceItem[] = [
     detail:
       "Nastavení příspěvků a strategie fondů tak, abyste využili stát i daňové úlevy — v souladu s vaším horizontem.",
     ctaHref: "/penzijnikalkulacka",
-    ctaLabel: "Optimální nastavení penze",
+    ctaLabel: "Spočítat penzi a příspěvky",
   },
   {
     id: "reality",
@@ -133,7 +133,7 @@ export const serviceItems: ServiceItem[] = [
     detail:
       "Komplexní servis u transakce nemovitosti — od odhadu a prezentace po právní a finanční návaznost včetně hypotéky.",
     ctaHref: "/#kontakt",
-    ctaLabel: "Konzultace realit",
+    ctaLabel: "Probrat realitní záměr",
   },
 ];
 
@@ -153,42 +153,42 @@ export const timelineEntries: TimelineEntry[] = [
     img: "/img/2013.jpg",
     title: "První kroky v OVB",
     text: "Během studia 5. ročníku na ekonomické VŠ jsem začal pracovat v OVB Allfinanz a.s.",
-    imagePositionClass: "object-[center_32%] sm:object-[center_28%]",
+    imagePositionClass: "object-[center_30%] sm:object-[center_28%]",
   },
   {
     year: "2015",
     img: "/img/2015.png",
     title: "Přestup do FINGO",
     text: "Pochopení, že existují lepší možnosti – přestup do F&P Consulting s.r.o. (dnešní FINGO).",
-    imagePositionClass: "object-[center_30%] sm:object-[center_26%]",
+    imagePositionClass: "object-[center_28%] sm:object-[center_26%]",
   },
   {
     year: "2016",
     img: "/img/2016.jpg",
     title: "Fulltime v Broker Trust",
     text: "Ukončení zaměstnání a plný přechod do světa financí. Získávání nezávislosti.",
-    imagePositionClass: "object-[center_35%] sm:object-[center_30%]",
+    imagePositionClass: "object-[center_34%] sm:object-[center_30%]",
   },
   {
     year: "2019",
     img: "/img/2019.jpg",
     title: "Založení Premium Brokers",
     text: "Vlastní firma s vizí prémiového a férového přístupu ke klientům.",
-    imagePositionClass: "object-[48%_25%] sm:object-[45%_22%]",
+    imagePositionClass: "object-[50%_28%] sm:object-[48%_24%]",
   },
   {
     year: "2021",
     img: "/img/2021.jpg",
     title: "Nové pobočky",
     text: "Otevření nových poboček v Litoměřicích, Štětí a Praze k současné Roudnické.",
-    imagePositionClass: "object-[center_28%] sm:object-[center_24%]",
+    imagePositionClass: "object-[center_32%] sm:object-[center_28%]",
   },
   {
     year: "2024",
     img: "/img/2024.jpg",
     title: "Premium Brokers Reality",
     text: "Založení realitní kanceláře Premium Brokers Reality s.r.o.",
-    imagePositionClass: "object-[52%_30%] sm:object-[50%_26%]",
+    imagePositionClass: "object-[center_33%] sm:object-[center_28%]",
   },
   {
     year: "2026",
@@ -196,6 +196,6 @@ export const timelineEntries: TimelineEntry[] = [
     title: "Lovosice a tým",
     text: "Lovosice, silný tým a komplexní péče pod jednou střechou.",
     yearClass: "text-brand-cyan",
-    imagePositionClass: "object-[center_25%] sm:object-[center_22%]",
+    imagePositionClass: "object-[center_34%] sm:object-[center_24%]",
   },
 ];

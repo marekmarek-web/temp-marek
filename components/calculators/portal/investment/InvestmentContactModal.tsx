@@ -41,8 +41,8 @@ export function InvestmentContactModal({
       open={open}
       onClose={onClose}
       calculatorType="investment"
-      title="Chci investiční plán"
-      subtitle="Nechte kontakt — připravím nezávazné shrnutí k vaší strategii."
+      title="Doladit investiční strategii"
+      subtitle="Nechte kontakt — připravím k vašim číslům nezávazné shrnutí a návrh dalšího kroku (osobně nebo online)."
       resultSummary={resultSummary}
       metadata={metadata}
       onSubmitSuccess={onSubmitSuccess}

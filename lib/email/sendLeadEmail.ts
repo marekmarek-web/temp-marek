@@ -1,5 +1,7 @@
 import { Resend } from "resend";
+import { inferLeadCategory } from "@/lib/leads/mapPayload";
 import type { CalculatorLeadBody } from "@/lib/validation/calculatorLeadSchema";
+import { getSiteUrl } from "@/lib/seo/page-meta";
 
 function formatMetadata(metadata: Record<string, string> | undefined): string {
   if (!metadata || Object.keys(metadata).length === 0) return "—";
@@ -8,20 +10,29 @@ function formatMetadata(metadata: Record<string, string> | undefined): string {
     .join("\n");
 }
 
-export function buildLeadEmailText(payload: CalculatorLeadBody, receivedAt: string): string {
+export function buildLeadEmailText(
+  payload: CalculatorLeadBody,
+  receivedAt: string,
+  opts?: { leadId?: string | null; adminUrl?: string },
+): string {
+  const admin = opts?.adminUrl ?? (opts?.leadId ? `${getSiteUrl()}/admin/leads/${opts.leadId}` : "—");
   const lines = [
     `Nový lead z webu`,
     `---`,
     `Čas: ${receivedAt}`,
-    `Zdroj: ${payload.source}`,
+    opts?.leadId ? `ID leadu (DB): ${opts.leadId}` : null,
+    `Admin (detail): ${admin}`,
+    `---`,
+    `Zdroj (CRM): ${payload.source}`,
+    `Kategorie (odhad): ${inferLeadCategory(payload)}`,
     payload.calculatorType ? `Kalkulačka: ${payload.calculatorType}` : null,
     payload.lifeIntent ? `Typ (životní): ${payload.lifeIntent}` : null,
-    payload.interest ? `Zájem: ${payload.interest}` : null,
+    payload.interest ? `Zájem / filtr: ${payload.interest}` : null,
     payload.topic ? `Téma: ${payload.topic}` : null,
     `Stránka: ${payload.sourcePath ?? "—"}`,
     `---`,
     `Jméno: ${payload.name}`,
-    `E-mail: ${payload.email}`,
+    payload.email?.trim() ? `E-mail: ${payload.email.trim()}` : `E-mail: — (jen telefon)`,
     payload.phone ? `Telefon: ${payload.phone}` : null,
     payload.consent != null ? `Souhlas GDPR: ${payload.consent ? "ano" : "ne"}` : null,
     `---`,
@@ -37,20 +48,23 @@ export function buildLeadEmailText(payload: CalculatorLeadBody, receivedAt: stri
   return lines.filter((x) => x != null).join("\n");
 }
 
-export function getLeadEmailSubject(payload: CalculatorLeadBody): string {
-  if (payload.calculatorType === "pension") return "Lead: Penzijní kalkulačka";
-  if (payload.calculatorType === "life") return `Lead: Životní pojištění (${payload.lifeIntent ?? "obecné"})`;
-  if (payload.calculatorType === "mortgage") return "Lead: Hypotéka / úvěr";
-  if (payload.calculatorType === "investment") return "Lead: Investiční kalkulačka";
-  if (payload.source === "footer_quick") return "Lead: Rychlý kontakt (footer)";
-  if (payload.source === "homepage_consultation") return "Lead: Nezávazná konzultace (úvodní strana)";
-  if (payload.source === "contact_page") return "Lead: Kontaktní stránka";
-  return "Lead: Web Premium Brokers";
+export function getLeadEmailSubject(payload: CalculatorLeadBody, leadId?: string | null): string {
+  const short = leadId ? ` [${leadId.slice(0, 8)}]` : "";
+  if (payload.calculatorType === "pension") return `Lead: Penzijní kalkulačka${short}`;
+  if (payload.calculatorType === "life") return `Lead: Životní pojištění (${payload.lifeIntent ?? "obecné"})${short}`;
+  if (payload.calculatorType === "mortgage") return `Lead: Hypotéka / úvěr${short}`;
+  if (payload.calculatorType === "investment") return `Lead: Investiční kalkulačka${short}`;
+  if (payload.source === "footer_quick") return `Lead: Patička (rychlý kontakt)${short}`;
+  if (payload.source === "homepage_consultation") return `Lead: Konzultace (úvodní strana)${short}`;
+  if (payload.source === "contact_page") return `Lead: Kontaktní stránka${short}`;
+  if (payload.source === "article_cta") return `Lead: Článek / blog${short}`;
+  return `Lead: Web Premium Brokers${short}`;
 }
 
 export async function sendLeadEmailResend(
   payload: CalculatorLeadBody,
   attachment?: { filename: string; content: Buffer },
+  leadId?: string | null,
 ): Promise<{ id?: string }> {
   const apiKey = process.env.RESEND_API_KEY;
   const to = process.env.LEAD_EMAIL_TO ?? "pribramsky@premiumbrokers.cz";
@@ -62,12 +76,14 @@ export async function sendLeadEmailResend(
 
   const resend = new Resend(apiKey);
   const receivedAt = new Date().toISOString();
-  const text = buildLeadEmailText(payload, receivedAt);
+  const base = getSiteUrl();
+  const adminUrl = leadId && base ? `${base}/admin/leads/${leadId}` : undefined;
+  const text = buildLeadEmailText(payload, receivedAt, { leadId: leadId ?? undefined, adminUrl });
   let textWithFile = text;
   if (attachment) {
     textWithFile += `\n\n---\nPříloha: ${attachment.filename} (${attachment.content.length} B)`;
   }
-  const subject = getLeadEmailSubject(payload);
+  const subject = getLeadEmailSubject(payload, leadId);
 
   const { data, error } = await resend.emails.send({
     from,

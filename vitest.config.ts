@@ -15,6 +15,6 @@ export default defineConfig({
   },
   test: {
     environment: "node",
-    include: ["lib/**/*.test.ts", "packages/calculators-core/src/**/*.test.ts"],
+    include: ["lib/**/*.test.ts", "tests/**/*.test.ts", "packages/calculators-core/src/**/*.test.ts"],
   },
 });

@@ -1,8 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { submitRecruitmentApplication } from "@/app/actions/recruitment";
-import { pageUrl } from "@/lib/forms/leadSubmit";
+import { legalConfig } from "@/config/legal";
+import { pageUrl } from "@/lib/forms/page-url";
 
 export function RecruitmentPageForm() {
   const [name, setName] = useState("");
@@ -132,13 +134,17 @@ export function RecruitmentPageForm() {
         />
         <label htmlFor="rec-consent" className="text-sm text-brand-muted">
           Souhlasím se zpracováním osobních údajů v rámci náboru.{" "}
+          <Link href="/gdpr" className="text-brand-navy hover:underline">
+            Webové zásady
+          </Link>
+          , partner:{" "}
           <a
-            href="https://www.beplan.cz/ochrana-osobnich-udaju/"
+            href={legalConfig.partnerPrivacyUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="text-brand-navy hover:underline"
           >
-            Více o ochraně údajů
+            BEplan
           </a>
           .
         </label>

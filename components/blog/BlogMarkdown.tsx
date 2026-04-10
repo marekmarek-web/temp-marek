@@ -4,7 +4,7 @@ type Props = { body: string };
 
 export function BlogMarkdown({ body }: Props) {
   return (
-    <div className="blog-md text-brand-text leading-relaxed">
+    <article className="blog-md text-brand-text leading-relaxed">
       <ReactMarkdown
         components={{
           p: ({ children }) => <p className="mb-4 text-brand-muted last:mb-0">{children}</p>,
@@ -36,6 +36,6 @@ export function BlogMarkdown({ body }: Props) {
       >
         {body}
       </ReactMarkdown>
-    </div>
+    </article>
   );
 }

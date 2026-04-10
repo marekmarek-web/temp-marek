@@ -4,6 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { AnalyticsEvents } from "@/lib/analytics/events";
+import { track } from "@/lib/analytics/track";
+import { cta } from "@/config/cta";
 import { mainNav, mobileMenuLinks, toolsDropdown, type NavItem } from "@/config/site";
 
 const CALC_PATHS = [
@@ -182,9 +185,10 @@ export function SiteHeader() {
             </nav>
             <Link
               href="/#kontakt"
+              onClick={() => track(AnalyticsEvents.ctaClick, { cta_id: "header_contact" })}
               className="header-cta lead-cta-btn hidden md:flex items-center justify-center gap-2 rounded-full text-white px-4 py-2 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-[#4FC6F2]/40 focus:ring-offset-1 shrink-0 no-underline"
             >
-              <span>Kontaktujte mě</span>
+              <span>{cta.headerPrimary}</span>
               <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 17L17 7M17 7H7M17 7v10" />
               </svg>
@@ -214,9 +218,12 @@ export function SiteHeader() {
           <Link
             href="/#kontakt"
             className="mobile-nav-link lead-cta-btn mt-4 py-4 rounded-xl text-white font-semibold text-center no-underline"
-            onClick={closeMenu}
+            onClick={() => {
+              track(AnalyticsEvents.ctaClick, { cta_id: "mobile_drawer_contact" });
+              closeMenu();
+            }}
           >
-            Kontaktujte mě
+            {cta.headerPrimary}
           </Link>
         </div>
       </nav>

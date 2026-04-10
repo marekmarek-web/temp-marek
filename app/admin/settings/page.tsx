@@ -38,9 +38,7 @@ export default async function AdminSettingsPage({ searchParams }: Props) {
           <label htmlFor="footer_tagline" className="block text-sm font-semibold text-brand-text mb-1.5">
             Text v patičce (pod logem)
           </label>
-          <p className="text-xs text-brand-muted mb-2">
-            Veřejně viditelný. Prázdné pole = výchozí text z kódu.
-          </p>
+          <p className="text-xs text-brand-muted mb-2">Veřejně viditelný. Prázdné pole = použije se výchozí text webu.</p>
           <textarea
             id="footer_tagline"
             name="footer_tagline"
@@ -54,7 +52,7 @@ export default async function AdminSettingsPage({ searchParams }: Props) {
             Úvodní text u sekce Blog (úvod + stránka /blog)
           </label>
           <p className="text-xs text-brand-muted mb-2">
-            Krátký odstavec pod nadpisem „Blog“. Prázdné = výchozí z kódu.
+            Krátký odstavec pod nadpisem „Blog“. Prázdné = výchozí text z nastavení šablony.
           </p>
           <textarea
             id="home_blog_intro"
@@ -66,9 +64,9 @@ export default async function AdminSettingsPage({ searchParams }: Props) {
         </div>
         <button
           type="submit"
-          className="py-4 px-8 rounded-2xl bg-brand-navy text-white font-bold hover:bg-brand-navy/90"
+          className="py-4 px-8 rounded-2xl bg-brand-navy text-white font-bold hover:bg-brand-navy/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan focus-visible:ring-offset-2"
         >
-          Uložit
+          Uložit nastavení
         </button>
       </form>
     </div>

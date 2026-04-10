@@ -1,12 +1,22 @@
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { HomeTailSections } from "@/components/home/HomeTailSections";
-import { WealthProjectionChart } from "@/components/home/WealthProjectionChart";
+import { cta } from "@/config/cta";
+
+const WealthProjectionChart = dynamic(
+  () => import("@/components/home/WealthProjectionChart").then((m) => m.WealthProjectionChart),
+  {
+    loading: () => <div className="h-64 min-h-[220px] animate-pulse rounded-lg bg-white/10" aria-hidden />,
+  },
+);
 
 /** Zbytek úvodní stránky podle kořenového `index.html` (kromě hero a loaderu). */
 export function HomeRestSections() {
   return (
     <>
       <section id="spoluprace" className="py-12 sm:py-16 md:py-20 lg:py-28 xl:py-32 bg-white relative overflow-hidden scroll-mt-28 md:scroll-mt-32">
+        {/* Legacy ID z index.html (#muj-postup) — sekce „Můj postup“ */}
+        <div id="muj-postup" className="sr-only scroll-mt-28 md:scroll-mt-32" aria-hidden />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10 sm:mb-14 lg:mb-20 animate-fade-in-up">
             <h2 className="section-title font-bold text-brand-text mb-4">Můj postup</h2>
@@ -95,7 +105,7 @@ export function HomeRestSections() {
               href="/#kontakt"
               className="lead-cta-btn inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-white font-bold transition-all duration-300 no-underline"
             >
-              Domluvit úvodní konzultaci
+              {cta.homeProcessPrimary}
               <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
@@ -112,9 +122,9 @@ export function HomeRestSections() {
           <div className="lg:flex lg:items-center lg:gap-16">
             <div className="lg:w-1/2 mb-10 lg:mb-0">
               <span className="text-brand-cyan font-bold tracking-widest uppercase text-xs">Investiční filozofie</span>
-              <h2 className="section-title font-bold text-white mt-2 mb-6">Jak to dělají nejbohatší fondy světa?</h2>
+              <h2 className="section-title font-bold text-white mt-2 mb-6">Dlouhý horizont, diverzifikace, nízké náklady</h2>
               <p className="text-white/80 mb-6 text-lg leading-relaxed">
-                Inspiruji se strategií jako je{" "}
+                Inspiraci beru u institucí, které investují po generace — například{" "}
                 <a
                   href="https://www.nbim.no/"
                   target="_blank"
@@ -167,7 +177,7 @@ export function HomeRestSections() {
                 href="/investicnikalkulacka"
                 className="lead-cta-btn inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-white font-bold transition-all duration-300 no-underline"
               >
-                Spočítat vlastní výnosy
+                {cta.homeProjectionCalc}
                 <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>

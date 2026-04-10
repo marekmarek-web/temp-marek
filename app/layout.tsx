@@ -3,11 +3,14 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import "../assets/css/styles.css";
 import "./header-scroll-override.css";
+import { AppProviders } from "@/components/providers/AppProviders";
 import { siteConfig } from "@/config/site";
 
 const inter = Inter({
   subsets: ["latin", "latin-ext"],
   variable: "--font-inter",
+  display: "swap",
+  adjustFontFallback: true,
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
@@ -34,7 +37,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="cs" className={inter.variable}>
-      <body className="font-sans text-brand-text antialiased bg-brand-background">{children}</body>
+      <body className="font-sans text-brand-text antialiased bg-brand-background">
+        <AppProviders>{children}</AppProviders>
+      </body>
     </html>
   );
 }

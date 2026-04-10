@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "description": "Import-ready články odpovídající legacy placeholder obrázkům (blog-1…3). Spusťte scripts/import-blog-seed.mjs nebo zkopírujte do adminu.",
+  "posts": [
+    {
+      "slug": "rezerva-pred-investici",
+      "title": "Nejdřív rezerva, pak investice: proč na tom záleží",
+      "excerpt": "Bez dostatečné hotovosti na neočekávané výdaje může i rozumná investice skončit prodejem ve špatný okamžik.",
+      "category": "Plánování",
+      "author_name": "Marek Příbramský",
+      "published_at": "2025-03-12T09:00:00.000Z",
+      "cover_image_url": "/img/blog/blog-1.jpg",
+      "content_type": "blog",
+      "bodyFile": "rezerva-pred-investici.md"
+    },
+    {
+      "slug": "hypoteka-nebo-investice",
+      "title": "Splácet hypotéku rychleji, nebo investovat? Jak o tom přemýšlet",
+      "excerpt": "Neexistuje jedna tabulka pro všechny — záleží na sazbě, horizontu, rizikové toleranci a daňové situaci.",
+      "category": "Bydlení",
+      "author_name": "Marek Příbramský",
+      "published_at": "2025-02-20T09:00:00.000Z",
+      "cover_image_url": "/img/blog/blog-2.jpg",
+      "content_type": "blog",
+      "bodyFile": "hypoteka-nebo-investice.md"
+    },
+    {
+      "slug": "duchod-jako-cil",
+      "title": "Důchod jako cíl: kdy začít a co sledovat",
+      "excerpt": "Čím dříve si nastavíte směr, tím méně „nápravných“ kroků budete muset dělat později.",
+      "category": "Penze",
+      "author_name": "Marek Příbramský",
+      "published_at": "2025-01-08T09:00:00.000Z",
+      "cover_image_url": "/img/blog/blog-3.jpg",
+      "content_type": "blog",
+      "bodyFile": "duchod-jako-cil.md"
+    }
+  ]
+}

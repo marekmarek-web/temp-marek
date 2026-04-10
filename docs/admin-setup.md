@@ -9,7 +9,10 @@ Zkopírujte `.env.example` do `.env.local` a doplňte:
 | `NEXT_PUBLIC_SITE_URL` | Kanonická URL webu (metadata, OG, fallback kanonického odkazu u článků). |
 | `NEXT_PUBLIC_SUPABASE_URL` | URL projektu (Settings → API). |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Anon public klíč (klient v prohlížeči a serverové RLS volání). |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Volitelná alternativa — nový formát `sb_publishable_…` z dashboardu; stačí jedno z obou. |
 | `SUPABASE_SERVICE_ROLE_KEY` | Pouze server, např. náborové formuláře — **nikdy do klienta**. |
+
+V **Supabase → Authentication → URL Configuration** přidejte do *Redirect URLs* alespoň `http://localhost:3000/**` (vývoj) a produkční doménu + `https://…/auth/callback`. Bez toho magic link a OAuth přihlášení skončí chybou po přesměrování.
 
 ## 2. Migrace databáze
 
@@ -17,6 +20,11 @@ V Supabase **SQL Editor** (nebo `supabase db push`) spusťte v pořadí:
 
 1. `supabase/migrations/001_initial.sql`
 2. `supabase/migrations/002_cms_roles_posts_rls.sql`
+3. `supabase/migrations/003_leads.sql` — leady, historie stavu, přílohy
+4. `supabase/migrations/004_staff_read_profiles.sql` — čtení profilů pro admin
+5. `supabase/migrations/005_subscribers_operations.sql` — odběratelé, rozšíření `posts` pro distribuci
+
+Bez **003–005** nebudou fungovat API leadů v plné šíři, admin lead inbox ani odběratelé podle aktuálního kódu.
 
 Volitelně: `supabase/seed.sql` pro ukázkové články a prázdné `site_settings`.
 

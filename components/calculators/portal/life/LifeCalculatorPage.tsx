@@ -1,6 +1,10 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useMemo, useState } from "react";
+import { CalculatorEngagement } from "@/components/analytics/CalculatorEngagement";
+import { AnalyticsEvents } from "@/lib/analytics/events";
+import { track } from "@/lib/analytics/track";
 import { CalculatorGoogleReviewBadge } from "../core/CalculatorGoogleReviewBadge";
 import { CalculatorMarketingHero } from "../core/CalculatorMarketingHero";
 import { CalculatorPageShell } from "../core/CalculatorPageShell";
@@ -9,7 +13,10 @@ import { LifeContactModal, type LifeModalType } from "./LifeContactModal";
 import { LifeHeroMethodology } from "./LifeHeroMethodology";
 import { LifeInputPanel } from "./LifeInputPanel";
 import { LifeResultsPanel } from "./LifeResultsPanel";
-import { LifeRiskChart } from "./LifeRiskChart";
+
+const LifeRiskChart = dynamic(() => import("./LifeRiskChart").then((m) => m.LifeRiskChart), {
+  loading: () => <div className="h-64 animate-pulse rounded-lg bg-slate-50" aria-hidden />,
+});
 import { DEFAULT_STATE } from "@/lib/calculators/life/life.config";
 import { runCalculations } from "@/lib/calculators/life/life.engine";
 import type { LifeState } from "@/lib/calculators/life/life.types";
@@ -20,8 +27,15 @@ export function LifeCalculatorPage() {
   const [leadType, setLeadType] = useState<LifeModalType>("proposal");
   const result = useMemo(() => runCalculations(state), [state]);
 
+  const openLead = (intent: LifeModalType) => {
+    track(AnalyticsEvents.calculatorCtaClick, { calculator: "life", intent });
+    setLeadType(intent);
+    setLeadOpen(true);
+  };
+
   return (
     <>
+    <CalculatorEngagement calculator="life" />
     <div className="pt-0 pb-56 lg:pb-0">
       <CalculatorPageShell>
         <CalculatorMarketingHero overflow="hidden" badge={<CalculatorGoogleReviewBadge />}>
@@ -65,14 +79,8 @@ export function LifeCalculatorPage() {
             <LifeResultsPanel
               state={state}
               result={result}
-              onCtaPrimary={() => {
-                setLeadType("proposal");
-                setLeadOpen(true);
-              }}
-              onCtaCheck={() => {
-                setLeadType("check");
-                setLeadOpen(true);
-              }}
+              onCtaPrimary={() => openLead("proposal")}
+              onCtaCheck={() => openLead("check")}
             />
           </div>
         </div>
@@ -93,14 +101,8 @@ export function LifeCalculatorPage() {
         <LifeResultsPanel
           state={state}
           result={result}
-          onCtaPrimary={() => {
-            setLeadType("proposal");
-            setLeadOpen(true);
-          }}
-          onCtaCheck={() => {
-            setLeadType("check");
-            setLeadOpen(true);
-          }}
+          onCtaPrimary={() => openLead("proposal")}
+          onCtaCheck={() => openLead("check")}
         />
       </CalculatorMobileResultDock>
     </div>
