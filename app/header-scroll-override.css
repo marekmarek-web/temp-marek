@@ -1,0 +1,5 @@
+/* Úvod má skrytý header do scrollu; ostatní stránky = viditelná hlavička.
+   Načíst po legacy styles.css, aby přebilo případná pravidla z PB stylů. */
+html:not(.home-scroll-header-init) #main-header {
+  transform: translateY(0) !important;
+}

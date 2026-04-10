@@ -1,0 +1,36 @@
+{
+  "generated": "2026-03-26",
+  "routes": [
+    { "path": "/", "legacy": "index.html", "scripts": ["assets/js/main.js", "assets/js/anim.js", "gsap CDN"] },
+    { "path": "/blog", "legacy": "blog/index.html", "scripts": [] },
+    { "path": "/kontakt", "legacy": "kontakt/index.html", "scripts": ["inline FormSubmit"] },
+    { "path": "/cookies", "legacy": "cookies/index.html", "scripts": [] },
+    { "path": "/gdpr", "legacy": "gdpr/index.html", "scripts": [] },
+    { "path": "/spoluprace", "legacy": "spoluprace/index.html", "scripts": [] },
+    { "path": "/kalkulacky", "legacy": "kalkulacky/index.html", "scripts": [] },
+    { "path": "/hypotecnikalkulacka", "legacy": "hypotecnikalkulacka/index.html", "scripts": ["inline: calculate, renderOffers, banksData"] },
+    { "path": "/investicnikalkulacka", "legacy": "investicnikalkulacka/index.html", "scripts": ["inline: calculate, Chart.js, ApexCharts"] },
+    { "path": "/zivotnikalkulacka", "legacy": "zivotnikalkulacka/index.html", "scripts": ["inline: life insurance calc"] },
+    { "path": "/penzijnikalkulacka", "legacy": "penzijnikalkulacka/index.html", "scripts": ["inline: pension calc"] }
+  ],
+  "formSubmit": {
+    "endpoint": "https://formsubmit.co/ajax/pribramsky@premiumbrokers.cz",
+    "flows": [
+      { "id": "lead-main", "source": "main.js #lead-form-el", "payloadKeys": ["_subject", "name", "contact", "topic", "message", "phone", "consent", "page", "created_at"] },
+      { "id": "lead-footer", "source": "main.js #footer-quick-lead", "payloadKeys": ["_subject", "name", "email", "phone", "interest", "source", "page", "created_at"] },
+      { "id": "kontakt-page", "source": "kontakt/index.html", "payloadKeys": ["name", "contact", "message", "consent", "page"] },
+      { "id": "calculator-leads", "source": "each *kalkulacka/index.html", "note": "per-page inline fetch, preserve JSON shape" }
+    ]
+  },
+  "decisions": {
+    "moje-cesta-timeline.js": "Not referenced in index.html — do not bundle; optional future GSAP timeline.",
+    "MotionPathPlugin": "Loaded in index.html but unused in markup/scripts — omit from Next until hero path is specified.",
+    "headerFooterCanonical": "Root index.html only; subpages are legacy duplicates."
+  },
+  "goldenCalculatorSeeds": {
+    "hypo": { "loan": 5000000, "own": 1000000, "term": 30, "product": "mortgage", "fixYears": 5, "note": "Capture expected monthlyPayment from legacy after port" },
+    "invest": { "initial": 500000, "monthly": 5000, "years": 10, "profileIndex": 0 },
+    "life": { "note": "Add numeric assertions after TS port from zivotnikalkulacka" },
+    "pension": { "note": "Add numeric assertions after TS port from penzijnikalkulacka" }
+  }
+}

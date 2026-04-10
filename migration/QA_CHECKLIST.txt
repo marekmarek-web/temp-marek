@@ -1,0 +1,15 @@
+HTML vs Next.js (manual)
+- index.html: sekce, loader, shimmery, qc-widget, header scroll — porovnat s HomePageClient a layoutem
+- blog/index.html, kontakt, cookies, gdpr, spoluprace, kalkulacky — porovnat s app/*/page.tsx
+- Legacy HTML kalkulačky (4×) — pole, výsledky, copy vs CRM UI na /hypotecnikalkulacka atd.
+
+CRM vs marketing Next
+- /portal/calculators/* vs components/calculators/portal (bez PDF exportu na webu)
+- /api/calculators/rates vs advisor-crm (Kurzy + FORCE_STATIC_RATES, MORTGAGE_RATES_OVERRIDE_JSON)
+- FormSubmit: modaly používají FORMSUBMIT_AJAX (+ volitelně NEXT_PUBLIC_FORMSUBMIT_URL)
+
+Animace / reduced motion
+- prefers-reduced-motion v legacy CSS; kalkulačky bez GSAP na podstránkách
+
+Vitest
+- npm test — mortgage.engine, matching, cache, lib/calculators/calculators.test.ts

@@ -2418,7 +2418,8 @@ img {
   #investicni-projekce .space-y-4 li { font-size: 0.9375rem; }
 }
 @media (min-width: 640px) and (max-width: 1023px) {
-  #investicni-projekce .lg\\:mb-0 { margin-bottom: 2rem; }
+  /* Tailwind třída lg:mb-0 — nelze psát jako .lg\:mb-0 (parser CSS hlásí :mb-0 jako pseudo-třídu) */
+  #investicni-projekce [class*="lg:mb-0"] { margin-bottom: 2rem; }
   #investicni-projekce .chart-card-tilt { padding: 1.5rem; }
 }
 
