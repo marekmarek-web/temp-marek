@@ -90,7 +90,15 @@ export async function submitRecruitmentApplication(input: unknown): Promise<Recr
       emailOk = true;
     } catch (e) {
       console.error("[recruitment] Resend:", e);
-      errors.push("E-mail se nepodařilo odeslat.");
+      const raw = e instanceof Error ? e.message : String(e);
+      let hint = "";
+      if (/domain|verify|not valid|validation|from address|sender/i.test(raw)) {
+        hint =
+          " V Resend ověřte doménu a na Vercelu nastavte RESEND_FROM (odesílatel z té domény). Výchozí onboarding@resend.dev obvykle nepošle na libovolný firemní e-mail.";
+      } else if (/api key|unauthorized|invalid api|401/i.test(raw)) {
+        hint = " Zkontrolujte RESEND_API_KEY na Vercelu (Production).";
+      }
+      errors.push(`E-mail se nepodařilo odeslat.${hint}`);
     }
   }
 
