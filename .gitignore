@@ -7,7 +7,9 @@ node_modules/
 # Build / output
 dist/
 .astro/
-.vercel/
+# Vercel: commit project.json for team/project IDs; ignore local output
+.vercel/*
+!.vercel/project.json
 .next/
 out/
 

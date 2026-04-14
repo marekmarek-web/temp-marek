@@ -1,0 +1,29 @@
+# Deploys this repo (marek-pribramsky) to the existing Vercel project on every push to main.
+# Vercel dashboard Git was still tied to temp-marek; this workflow deploys from the correct GitHub repo.
+#
+# GitHub → repo Settings → Secrets and variables → Actions, add:
+#   VERCEL_TOKEN        — https://vercel.com/account/tokens
+#   VERCEL_ORG_ID       — team_woN6zSzeeALq7WJhblMkgWc2 (same as .vercel/project.json orgId)
+#   VERCEL_PROJECT_ID   — prj_Fr6MI1dZHPuYFrHXNv5jWiS7jBxz (same as .vercel/project.json projectId)
+#
+# If you later connect this Git repo in Vercel project settings, disable either this workflow or
+# Vercel Git deploys to avoid double production deployments.
+
+name: Vercel Production
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy to Vercel
+        run: npx vercel@latest deploy --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
