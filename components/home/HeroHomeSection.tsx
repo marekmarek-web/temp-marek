@@ -31,7 +31,7 @@ export function HeroHomeSection({ booted }: { booted: boolean }) {
     >
       <div className="hero-image-wrapper absolute inset-3 z-0 overflow-hidden rounded-[1rem] shadow-2xl sm:inset-4 md:inset-6">
         <div className="absolute inset-0 bg-brand-navy" aria-hidden />
-        <div className="relative z-[1] h-[min(82dvh,880px)] min-h-[320px] w-full sm:h-[min(86dvh,900px)] md:h-[min(88vh,920px)]">
+        <div className="absolute inset-0 z-[1] min-h-[240px]">
           <Image
             src={HOME_HERO.src}
             alt={HOME_HERO.alt}
@@ -54,9 +54,9 @@ export function HeroHomeSection({ booted }: { booted: boolean }) {
             <span className="text-reveal-line text-gradient-shimmer-blue">Marek Příbramský.</span>
           </div>
         </h1>
-        <p className="hero-subtitle mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/92 opacity-0 hero-text-shadow max-sm:mt-4 max-sm:text-base sm:mt-8 md:text-xl">
+        <p className="hero-subtitle mx-auto mt-6 max-w-2xl rounded-2xl bg-black/42 px-5 py-4 text-lg leading-relaxed text-white opacity-0 shadow-[0_12px_40px_rgba(0,0,0,0.35)] ring-1 ring-white/12 backdrop-blur-[6px] hero-text-shadow max-sm:mt-4 max-sm:px-4 max-sm:py-3 max-sm:text-base sm:mt-8 sm:px-6 sm:py-5 md:text-xl">
           Finanční plánování pro rodiny a firmy — srozumitelně, bez tlaku na produkt.
-          <span className="mt-3 block text-base text-white/88 md:text-lg">
+          <span className="mt-3 block text-base text-white/95 md:text-lg">
             Sjednotíme cíle, rizika a nástroje tak, aby dávaly smysl vaší situaci.
           </span>
         </p>

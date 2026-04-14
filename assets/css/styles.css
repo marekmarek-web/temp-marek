@@ -91,10 +91,7 @@ body {
   .hero-aurora .hero-image-wrapper {
     inset: 0.5rem;
   }
-  /* Na mobilu posunout fotku vpravo, aby byl Marek v záběru */
-  .hero-aurora .hero-img-full {
-    object-position: right center;
-  }
+  /* object-position řeší Tailwind v lib/media/home-hero.ts (vrchovatě = hlava v záběru) */
   .hero-aurora .hero-title {
     font-size: clamp(2rem, 8vw, 3rem);
     line-height: 1.15;

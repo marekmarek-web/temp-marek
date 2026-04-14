@@ -16,6 +16,9 @@ out/
 .env.local
 .env.*.local
 
+# Supabase CLI link cache (may contain connection hints)
+supabase/.temp/
+
 # IDE
 .vscode/
 *.swp

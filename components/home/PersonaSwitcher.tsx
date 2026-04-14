@@ -1,11 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useId, useState } from "react";
+import { useCallback, useState } from "react";
 import { personaContent, type PersonaId } from "@/components/home/home-data";
 
+/** Stabilní prefix místo useId() — předejde hydration mismatch SSR vs. klient (viz Next.js docs). */
+const PERSONA_DOM_ID = "home-persona-switcher";
+
 export function PersonaSwitcher() {
-  const baseId = useId();
+  const baseId = PERSONA_DOM_ID;
   const [active, setActive] = useState<PersonaId>("rodina");
 
   const indexOf = useCallback((id: PersonaId) => personaContent.findIndex((p) => p.id === id), []);

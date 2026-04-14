@@ -1,6 +1,7 @@
 /**
  * Homepage hero — jeden zdroj, art direction přes responsive object-position.
- * Bezpečná zóna: text je uprostřed / dole; focal směřuje k horní třetině u portrétu.
+ * Vertikálně vždy ukotvit nahoru (y = 0 %), aby při object-cover nezmizela hlava na žádném poměru stran.
+ * Horizontálně mírně doprava — portrét je v pravé části snímku.
  *
  * Volitelně lze později přepnout na `<picture>` + heromobile.jpg pro odlišný crop na XS.
  */
@@ -10,10 +11,10 @@ export const HOME_HERO = {
   /** Popisný alt (ne jen jméno) */
   alt: "Marek Příbramský při konzultaci — finanční poradce Premium Brokers",
   /**
-   * Mobile: více centrovat obličej; desktop: mírně vlevo od středu kvůli kompozici snímku.
+   * y: 0 % = horní okraj fotky u horního okraje rámu (priorita hlavy). x: jemný posun pod šířku viewportu.
    */
   imageClassName:
-    "hero-img-full object-cover object-[52%_26%] max-sm:object-[50%_28%] sm:object-[48%_22%] md:object-[46%_18%] lg:object-[44%_16%] xl:object-[42%_14%] 2xl:object-[40%_13%]",
+    "hero-img-full object-cover max-sm:object-[58%_0%] sm:object-[60%_0%] md:object-[62%_0%] lg:object-[60%_0%] xl:object-[58%_0%] 2xl:object-[56%_0%]",
   sizes: "100vw",
   /** Hero je LCP */
   quality: 82 as const,

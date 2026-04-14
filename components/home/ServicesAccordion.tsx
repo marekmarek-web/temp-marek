@@ -1,11 +1,14 @@
 "use client";
 
-import { useCallback, useId, useState } from "react";
+import { useCallback, useState } from "react";
 import { serviceItems } from "@/components/home/home-data";
 import { ServiceCard } from "@/components/home/ServiceCard";
 
+/** Stabilní prefix místo useId() — předejde hydration mismatch SSR vs. klient. */
+const SERVICES_ACC_DOM_ID = "home-services-accordion";
+
 export function ServicesAccordion() {
-  const baseId = useId();
+  const baseId = SERVICES_ACC_DOM_ID;
   const [openId, setOpenId] = useState<string | null>(null);
 
   const toggle = useCallback((id: string) => {
